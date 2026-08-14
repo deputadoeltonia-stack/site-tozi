@@ -112,6 +112,36 @@
     setTimeout(() => targets.forEach((t) => t.classList.add("in")), 2500);
   }
 
+  /* ============ header camaleão ============
+     Seções escuras levam [data-header-dark]; quando uma delas passa sob a
+     linha do header, ele veste a pele navy (.on-dark). Scroll + rAF em vez
+     de IntersectionObserver: 3 getBoundingClientRect por frame é barato e
+     o resultado é determinístico (IO com rootMargin varia por viewport). */
+  function initHeaderTheme() {
+    const header = document.getElementById("header");
+    if (!header) return;
+    const darks = Array.prototype.slice.call(document.querySelectorAll("[data-header-dark]"));
+    if (!darks.length) return;
+    let ticking = false;
+    function apply() {
+      ticking = false;
+      /* sonda 1px ABAIXO do header: no scroll 0 o hero começa exatamente no
+         bottom do header sticky — sondar dentro da faixa do header nunca
+         encosta no hero e o topo ficava com a pele clara errada */
+      const linha = header.getBoundingClientRect().bottom + 1;
+      const sobreEscuro = darks.some(function (el) {
+        const r = el.getBoundingClientRect();
+        return r.top <= linha && r.bottom >= linha;
+      });
+      header.classList.toggle("on-dark", sobreEscuro);
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+    window.addEventListener("resize", apply);
+    apply();
+  }
+
   /* ============ formulário de lead ============ */
   function setErr(input, msgEl, msg) {
     if (msg) {
@@ -142,8 +172,8 @@
       const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
       use.setAttribute("href", "#i-wa");
       svg.appendChild(use);
-      a.appendChild(svg);
-      a.appendChild(document.createTextNode(acaoWa.rotulo));
+      a.appendChild(document.createTextNode(acaoWa.rotulo + " "));
+      a.appendChild(svg);                       // logo do WhatsApp depois do texto/número
       status.appendChild(a);
     }
     status.hidden = false;
@@ -221,6 +251,7 @@
   /* ============ boot ============ */
   function boot() {
     document.body.classList.add("is-loaded");
+    initHeaderTheme();
     initReveal();
     initForm();
     if (location.search.indexOf("selftest") !== -1) selftest();

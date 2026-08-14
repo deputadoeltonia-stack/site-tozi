@@ -1,25 +1,39 @@
 /* =========================================================
    Professor Tozi — Deputado Estadual
-   Direção: "a margem do professor" — autoridade calma + grifo âmbar
-   Paleta: porcelana fria / ardósia / tinta / âmbre / giz
+   Direção: "a margem do professor" + identidade oficial da campanha
+   Paleta: porcelana fria / navy oficial (Pantone 274C/280C) / tinta / azul-marca (Pantone 2132C) / giz
    Fontes: Bricolage Grotesque (display) + Spectral (leitura)
    ========================================================= */
+
+/* ---- fontes oficiais do TOZI ID (servidas localmente, sem Google Fonts) ----
+   Geometos = títulos (caps-only: minúscula vira caixa alta, é o desenho)
+   Geometos Neue Black = destaque de palavra dentro do título / título curto
+   Avenir LT Std = conteúdo, subtítulos e UI (arquivo 500 cobre 500-800) */
+@font-face { font-family: "Geometos"; src: url("../public/assets/fonts/geometos.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Geometos Neue"; src: url("../public/assets/fonts/geometos-black.woff2") format("woff2"); font-weight: 900; font-display: swap; }
+@font-face { font-family: "Avenir LT Std"; src: url("../public/assets/fonts/avenir-300.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+@font-face { font-family: "Avenir LT Std"; src: url("../public/assets/fonts/avenir-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Avenir LT Std"; src: url("../public/assets/fonts/avenir-i.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Avenir LT Std"; src: url("../public/assets/fonts/avenir-500.woff2") format("woff2"); font-weight: 500 800; font-display: swap; }
 
 :root {
   --porcelain: #F1F3F0;   /* fundo (não é creme) */
   --porcelain-2: #E8EBE6; /* faixa alternada */
-  --slate: #17262B;       /* hero/rodapé — o "quadro" */
-  --slate-2: #1E323A;
-  --ink: #1A2529;         /* texto */
-  --ink-muted: #55636A;   /* texto secundário */
-  --amber: #C9791F;       /* acento único (fills, sobre fundo escuro) */
-  --amber-text: #8F5410;  /* ocre escuro p/ TEXTO sobre fundo claro (AA >=4.5) */
-  --amber-lit: #E0913A;   /* âmbar claro p/ TEXTO sobre ardósia — 5.27:1 até no topo do gradiente do hero */
-  --chalk: #ECE7DB;       /* texto/linhas sobre ardósia */
-  --chalk-line: rgba(236,231,219,.16);
+  --slate: #1A174E;       /* Pantone 274C — hero/rodapé — o "quadro" */
+  --slate-2: #001A6D;     /* Pantone 280C — realce do gradiente */
+  --ink: #10132E;         /* texto — navy quase preto, 16.3:1 sobre porcelana */
+  --ink-muted: #4A5578;   /* texto secundário — 6.58:1 sobre porcelana */
+  --brand: #1055BD;       /* Pantone 2132C — acento único (identidade oficial) */
+  --brand-lit: #6490D4;   /* azul claro p/ TEXTO/ícone sobre navy — 4.74:1 no pior caso (slate-2) */
+  --chalk: #E9EAF2;       /* texto/linhas sobre navy */
+  --chalk-line: rgba(233,234,242,.16);
 
-  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
-  --font-body: "Spectral", Georgia, "Times New Roman", serif;
+  /* --font-display alimenta botões/nav/legendas (a UI): agora é Avenir.
+     Geometos fica restrita a --font-title (títulos + número), como no ID. */
+  --font-title: "Geometos", "Avenir LT Std", system-ui, sans-serif;
+  --font-title-bold: "Geometos Neue", "Geometos", system-ui, sans-serif;
+  --font-display: "Avenir LT Std", system-ui, sans-serif;
+  --font-body: "Avenir LT Std", system-ui, sans-serif;
 
   --wrap: 1120px;
   --gutter: clamp(1.25rem, 5vw, 3rem);
@@ -51,11 +65,25 @@ body {
   overflow-x: clip;
 }
 
-h1, h2, h3, .brand, .btn, .nav a, .tl-year, cite, label, .hero-nome, .hero-cargo {
+h1, h2, h3, .brand, .btn, .nav a, .tl-year, cite, label {
   font-family: var(--font-display);
 }
+/* títulos = Geometos (caps); tracking POSITIVO — geométrica larga odeia
+   tracking negativo, as hastes colam */
+h1, h2, h3 { font-family: var(--font-title); }
 
-h1, h2, h3 { line-height: 1.08; letter-spacing: -0.015em; margin: 0; font-weight: 700; }
+h1, h2, h3 { line-height: 1.12; letter-spacing: .01em; margin: 0; font-weight: 700; }
+
+/* sem viúva: nenhuma frase termina com palavra sozinha na última linha
+   (pedido do user). pretty re-quebra o parágrafo; browser sem suporte ignora */
+p, li, figcaption { text-wrap: pretty; }
+
+/* destaque DENTRO do título: Geometos Neue Black (pedido do user) */
+h1 strong, h2 strong, h3 strong,
+.section-title strong {
+  font-family: var(--font-title-bold);
+  font-weight: 900;
+}
 
 a { color: inherit; }
 img { max-width: 100%; display: block; }
@@ -67,12 +95,6 @@ img { max-width: 100%; display: block; }
   padding-inline: var(--gutter);
 }
 
-/* ---- grifo do professor (assinatura) ---- */
-.grifo {
-  background: linear-gradient(transparent 58%, rgba(201,121,31,.34) 58%, rgba(201,121,31,.34) 94%, transparent 94%);
-  color: inherit;
-  padding: 0 .06em;
-}
 
 /* ---------- botões ---------- */
 .btn {
@@ -91,11 +113,11 @@ img { max-width: 100%; display: block; }
   transition: transform .18s var(--ease), background-color .18s var(--ease), box-shadow .18s var(--ease);
 }
 .btn-cta {
-  background: var(--amber);
-  color: var(--ink);        /* tinta sobre âmbar = AA 4.65:1 (branco reprovava) */
+  background: var(--brand);
+  color: #fff;               /* branco sobre azul-marca = AA 6.87:1 (tinta reprovava, só 2.28:1) */
   box-shadow: 0 1px 0 rgba(0,0,0,.12);
 }
-.btn-cta:hover { background: #b56b16; transform: translateY(-1px); }
+.btn-cta:hover { background: #0D4497; transform: translateY(-1px); }
 .btn-ghost {
   background: transparent;
   color: var(--chalk);
@@ -104,21 +126,45 @@ img { max-width: 100%; display: block; }
 .btn-ghost:hover { border-color: var(--chalk); }
 .btn-block { width: 100%; }
 
-/* foco visível (acessibilidade) */
+/* foco visível (acessibilidade). Duas cores porque azul-marca não rende
+   3:1 (não-texto) contra o próprio navy do hero/rodapé/form — o âmbar
+   original servia os dois lados de graça por ser complementar; o azul
+   oficial precisa de --brand-lit nas seções escuras. */
 a:focus-visible, button:focus-visible, input:focus-visible {
-  outline: 3px solid var(--amber);
+  outline: 3px solid var(--brand);
   outline-offset: 2px;
   border-radius: 4px;
 }
+.hero a:focus-visible, .hero button:focus-visible,
+.section-dark a:focus-visible, .section-dark button:focus-visible,
+.site-footer a:focus-visible, .site-footer button:focus-visible,
+.mobile-bar a:focus-visible {
+  outline-color: var(--brand-lit);
+}
 
 /* ---------- header ---------- */
+/* Header camaleão POR CONTRASTE (pedido do user): o header nunca combina
+   com a seção — ele se opõe. Seção clara embaixo = header NAVY; seção
+   escura (hero/form/rodapé, marcadas com [data-header-dark]) = header
+   CLARO. O JS liga .on-dark quando a seção sob o header é escura; aqui
+   só as duas peles + transição. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(241,243,240,.86);
+  /* pele padrão = NAVY (as seções do miolo são claras) */
+  background: rgba(16,19,46,.82);
   backdrop-filter: saturate(1.4) blur(10px);
-  border-bottom: 1px solid rgba(26,37,41,.08);
+  border-bottom: 1px solid rgba(233,234,242,.14);
+  box-shadow: 0 10px 28px rgba(16,19,46,.16);
+  transition: background-color .35s var(--ease), border-color .35s var(--ease),
+              box-shadow .35s var(--ease);
+}
+/* seção escura embaixo -> header vira CLARO (o contraste inverte) */
+.site-header.on-dark {
+  background: rgba(241,243,240,.88);
+  border-bottom-color: rgba(16,19,46,.08);
+  box-shadow: 0 10px 28px rgba(0,0,0,.22);
 }
 
 /* régua de leitura: o grifo âmbar preenchendo conforme o scroll.
@@ -130,14 +176,18 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     position: absolute;
     inset: auto 0 -1px 0;
     height: 2.5px;
-    background: var(--amber);
+    /* sobre navy o azul-marca some (2.39:1); o camaleão troca pro claro */
+    background: var(--leitura-cor, var(--brand));
     transform-origin: 0 50%;
     transform: scaleX(0);
     animation: leitura linear forwards;
     animation-timeline: scroll(root);
+    transition: background-color .35s var(--ease);
   }
   @keyframes leitura { to { transform: scaleX(1); } }
 }
+.site-header { --leitura-cor: var(--brand-lit); }  /* pele navy */
+.site-header.on-dark { --leitura-cor: var(--brand); } /* pele clara */
 .header-inner {
   display: flex;
   align-items: center;
@@ -147,46 +197,56 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: .55rem;
+  gap: .65rem;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1.12rem;
-  letter-spacing: -0.02em;
   margin-right: auto;
 }
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 34px; height: 34px;
-  background: var(--slate);
-  color: var(--amber);
-  border-radius: 8px;
-  font-family: var(--font-body);
-  font-weight: 700;
+/* lockup oficial PROF+ondas+TOZI (vetor do TOZI ID via sprite #i-logo).
+   Letras = currentColor; acentos azuis = --logo-acc (atravessa o shadow
+   DOM do <use> porque custom property herda). O camaleão troca os dois. */
+.brand-logo {
+  width: 117px;
+  height: 32px;
+  color: #fff;                       /* pele navy -> letras brancas */
+  --logo-acc: var(--brand-lit);
+  transition: color .35s var(--ease);
+}
+.site-header.on-dark .brand-logo {
+  color: var(--slate);               /* pele clara -> letras navy */
+  --logo-acc: var(--brand);
 }
 /* número fixo no header: acompanha toda a rolagem.
-   Mesmo tratamento do .brand-mark (ardósia + âmbar) pra não inventar
+   Mesmo tratamento do .brand-mark (navy + azul-marca) pra não inventar
    linguagem nova — é o mesmo objeto de marca, com dígitos. */
 .brand-num {
-  background: var(--slate);
-  color: var(--amber);
+  font-family: var(--font-title);    /* 44447 em Geometos, como no lockup */
+  background: var(--chalk);          /* pele navy -> placa clara */
+  color: var(--slate);
   border-radius: 6px;
   padding: .2rem .5rem .25rem;
   font-size: .95rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   letter-spacing: .05em;
+  transition: background-color .35s var(--ease), color .35s var(--ease);
 }
+.site-header.on-dark .brand-num { background: var(--slate); color: var(--chalk); }
 .nav { display: none; gap: 1.4rem; }
 .nav a {
   text-decoration: none;
   font-weight: 500;
   font-size: .98rem;
-  color: var(--ink-muted);
+  color: #C2C9DE;                    /* pele navy -> nav claro */
   padding: .3rem 0;
   position: relative;
+  transition: color .35s var(--ease);
 }
-.nav a:hover { color: var(--ink); }
+.nav a:hover { color: #fff; }
+.site-header.on-dark .nav a { color: var(--ink-muted); }
+.site-header.on-dark .nav a:hover { color: var(--ink); }
+/* foco visível acompanha a pele (azul-marca não rende sobre navy) */
+.site-header a:focus-visible { outline-color: var(--brand-lit); }
+.site-header.on-dark a:focus-visible { outline-color: var(--brand); }
 .header-cta { padding: .6rem 1.05rem; font-size: .95rem; }
 
 /* CTA do header respira, chamando atenção.
@@ -200,11 +260,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 @keyframes cta-respira {
   0%, 60%, 100% {
     scale: 1;
-    box-shadow: 0 1px 0 rgba(0,0,0,.12), 0 0 0 0 rgba(201,121,31,0);
+    box-shadow: 0 1px 0 rgba(0,0,0,.12), 0 0 0 0 rgba(16,85,189,0);
   }
   30% {
     scale: 1.055;
-    box-shadow: 0 1px 0 rgba(0,0,0,.12), 0 0 0 7px rgba(201,121,31,.18);
+    box-shadow: 0 1px 0 rgba(0,0,0,.12), 0 0 0 7px rgba(16,85,189,.18);
   }
 }
 
@@ -223,93 +283,93 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .nav { display: flex; }
 }
 
-/* ---------- hero ---------- */
+/* ---------- hero (réplica da pág 6 do TOZI ID) ----------
+   Medidas extraídas do PDF (frame 1920x1080):
+   bg #202051 chapado · ondas #0C62AE x0->64.8% na metade inferior ·
+   manchete a 6.3% / 33% · placa direita a 5.7% da borda, topo 44% ·
+   botão de scroll ~79% x / 87% y */
 .hero {
-  background: radial-gradient(120% 90% at 78% 12%, var(--slate-2), var(--slate) 60%);
+  position: relative;
+  background: #202051;
   color: var(--chalk);
   padding: clamp(2.5rem, 6vw, 5rem) 0 0;
   /* clip, nunca hidden: hidden é scroll container e sequestra scroll()
      das animações internas (timeline preso num scroller que não rola) */
   overflow: clip;
 }
+/* ondas EXATAS da pág 6 (vetor extraído, cor #0C62AE já no arquivo) */
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 64.8%;
+  height: 51.2%;
+  background: url("../public/assets/marca/ondas-hero.svg") no-repeat 0 0 / 100% 100%;
+  pointer-events: none;
+}
+.hero-grid { position: relative; z-index: 1; }
 .hero-grid {
   display: grid;
   gap: clamp(1rem, 3vw, 2rem);
   align-items: end;
 }
-/* Identidade eleitoral: nome + cargo + número na urna.
-   O nome e o número são o que o eleitor precisa levar embora, então ganham
-   corpo próprio acima da tese. O H1 continua sendo o maior elemento — o
-   número vence pela COR (placa âmbar sólida, o único bloco cheio do hero),
-   não pelo tamanho. Foi isso que substituiu a antiga .hero-eyebrow de .82rem,
-   onde o 44447 vinha no fim de uma linha e ninguém via. */
-.hero-id { margin: 0 0 1.6rem; }
-.hero-nome {
-  font-size: clamp(1.55rem, 5vw, 2.4rem);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.05;
-  color: var(--chalk);
-  margin: 0;
+/* Identidade eleitoral no hero = placa da DIREITA (guia pág 6):
+   "DEPUTADO ESTADUAL" rastreado + lockup completo PROF/ondas/TOZI/44447.
+   O antigo bloco hero-id (nome+cargo+placa) morreu — era redundante. */
+.hero-plate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .55rem;
+  color: #fff;                       /* letras e dígitos do lockup */
 }
-.hero-cargo {
-  font-size: .95rem;
-  font-weight: 500;
-  color: #cfcabe;
-  margin: .3rem 0 0;
-}
-
-/* placa do número — hero e rodapé compartilham o mesmo objeto, só muda a escala */
-.hero-numero,
-.footer-num {
-  display: inline-flex;
-  align-items: baseline;
-  gap: .5rem;
-  background: var(--amber);
-  color: var(--ink);          /* tinta sobre âmbar = 4.65:1, mesma regra do .btn-cta */
-  border-radius: var(--radius-sm);
-  box-shadow: 0 1px 0 rgba(0,0,0,.12);
-}
-.hero-numero { margin: .9rem 0 0; padding: .45rem .95rem .5rem; }
-.footer-num { padding: .35rem .75rem .4rem; }
-
-.hero-numero-rot,
-.footer-num-rot {
+.plate-cargo {
   font-family: var(--font-display);
-  font-weight: 600;
-  opacity: .72;
+  font-weight: 700;
+  /* pág 6: cargo ocupa a mesma largura da placa (tracking abre a linha) */
+  font-size: clamp(.78rem, 1.35vw, 1.3rem);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #fff;
   white-space: nowrap;
 }
-.hero-numero-rot { font-size: .82rem; }
-.footer-num-rot { font-size: .72rem; }
-
-.hero-numero strong,
-.footer-num strong {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: .05em;      /* dígitos precisam de ar; sem isso 44447 vira um borrão */
-  line-height: 1;
+.plate-logo {
+  /* pág 6: placa = 27.7% da largura do frame */
+  width: clamp(230px, 27.7vw, 460px);
+  aspect-ratio: 531.9 / 266.1;
+  height: auto;
 }
-.hero-numero strong { font-size: clamp(1.9rem, 5.5vw, 2.8rem); }
-.footer-num strong { font-size: 1.5rem; }
 .hero-title {
-  font-size: clamp(2.1rem, 7vw, 4.1rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin: 0 0 1.1rem;
-  max-width: 15ch;
-}
-.hero-title .grifo {
-  background: linear-gradient(transparent 60%, rgba(201,121,31,.5) 60%, rgba(201,121,31,.5) 92%, transparent 92%);
+  /* pág 6: 51px em 1920 = 2.65vw, 2 linhas, entrelinha 1.06, sem ponto */
+  font-size: clamp(1.55rem, 2.65vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: .01em;
+  line-height: 1.12;
+  color: var(--chalk);
+  margin: 0 0 1.2rem;
 }
 .hero-lead {
   font-size: clamp(1.1rem, 1rem + 0.6vw, 1.32rem);
-  color: #d7d2c6;
+  color: #C7CEE3;
   max-width: 46ch;
   margin: 0 0 1.8rem;
 }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 2.2rem; }
+/* CTA do hero: branco com tinta navy — azul-marca sumia sobre as ondas
+   azuis; branco é o único plano que destaca nos dois fundos */
+.hero .btn-cta {
+  background: #fff;
+  color: #202051;
+  font-weight: 700;
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+.hero .btn-cta:hover { background: var(--chalk); }
+.hero .btn-ghost { border-color: rgba(233,234,242,.55); }
+@media (min-width: 860px) {
+  /* desce o bloco de ação: simetria vertical com a placa da direita */
+  .hero-actions { margin-top: 3rem; }
+}
 
 .hero-photo {
   position: relative;
@@ -331,7 +391,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .hero-img {
   position: relative;
   z-index: 1;
-  height: clamp(340px, 52vw, 560px);
+  height: clamp(390px, 58vw, 650px);   /* foto maior (pedido do user) */
   width: auto;
   object-fit: contain;
   object-position: bottom center;
@@ -355,54 +415,88 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .hero-photo.no-photo .hero-photo-fallback span {
   font-family: var(--font-display);
   font-size: 3rem; font-weight: 800;
-  color: rgba(236,231,219,.4);
+  color: rgba(233,234,242,.4);
 }
 .hero-photo.no-photo .hero-photo-fallback small { font-family: var(--font-display); font-size: .72rem; }
 
 @media (min-width: 860px) {
-  .hero-grid { grid-template-columns: 1.1fr .9fr; }
-  .hero-photo { max-width: none; }
+  /* palco absoluto com as coordenadas da pág 6 (grid não reproduz a
+     sobreposição foto/ondas/manchete do guia) */
+  .hero { padding: 0; }
+  .hero-grid {
+    display: block;
+    max-width: none;
+    height: clamp(620px, 92vh, 900px);
+    padding: 0;
+  }
+  .hero-copy {
+    position: absolute;
+    left: 6.3%;
+    top: 27%;
+    width: min(40vw, 580px);
+    z-index: 2;
+  }
+  .hero-photo {
+    position: absolute;
+    inset: auto 0 0 0;          /* centra sem transform (a entrada anima transform) */
+    justify-content: center;
+    height: 84%;
+    max-width: none;
+    min-height: 0;
+    z-index: 1;
+  }
+  .hero-img { height: 100%; }
+  .hero-plate {
+    position: absolute;
+    right: 5.7%;
+    top: 42%;
+    z-index: 2;
+  }
+}
+/* mobile: manchete -> placa -> foto (foto continua cortada na dobra da seção) */
+@media (max-width: 859px) {
+  .hero-plate { order: 2; margin: .4rem 0 1.4rem; }
+  .hero-photo { order: 3; }
+}
+/* mobile: manchete -> placa -> foto (foto continua cortada na dobra da seção) */
+@media (max-width: 859px) {
+  .hero-plate { order: 2; margin: .4rem 0 1.4rem; }
+  .hero-photo { order: 3; }
 }
 
 /* ===== VIDA DO HERO ======================================================
-   Na ENTRADA (tempo, sem depender de scroll): a manchete pousa e o grifo
-   âmbar SE DESENHA sobre "transforma vidas" — o professor riscando a
-   frase-chave. Depois o halo respira em loop lento (vida ambiente).
-   No SCROLL: a foto do Tozi se aproxima sutilmente.
-   Gates: sem JS ou reduced-motion = grifo cheio estático (conteúdo nunca
-   depende de animação).                                                  */
+   Na ENTRADA: elementos pousam em cascata. Halo respira em loop lento.
+   No SCROLL: a foto do Tozi se aproxima sutilmente (gateado por
+   reduced-motion).                                                       */
 .hero-stage { display: contents; }
 
-/* Grifo VIVO: 2 camadas de background —
-   camada 1 = brilho diagonal que varre a marca a cada 5s (pra sempre)
-   camada 2 = a tinta âmbar do marca-texto (se desenha na entrada)
-   Micro-motion (brilho/opacidade, área pequena): roda SEM gate de
-   reduced-motion de propósito; só parallax/scale ficam gateados. */
-.hero-title .grifo {
-  background:
-    linear-gradient(105deg, transparent 0%, rgba(255,240,214,.65) 45%, transparent 90%),
-    linear-gradient(transparent 60%, rgba(201,121,31,.5) 60%, rgba(201,121,31,.5) 92%, transparent 92%);
-  background-repeat: no-repeat, no-repeat;
-  background-size: 55% 32%, 100% 100%;
-  background-position: -150% 88%, 0 0;
-  animation: grifo-brilho 5s ease-in-out 2.2s infinite;
+/* botão circular de scroll (guia pág 6), canto inferior direito do hero */
+.hero-scroll {
+  /* pág 6: círculo #0C62AE de ~5.6vw centrado em 79% x / 87% y */
+  position: absolute;
+  right: 18%;
+  bottom: 8%;
+  z-index: 2;
+  display: none;
+  place-items: center;
+  width: clamp(56px, 5.6vw, 92px);
+  height: clamp(56px, 5.6vw, 92px);
+  border-radius: 50%;
+  background: #0C62AE;
+  color: #fff;
+  box-shadow: 0 10px 26px rgba(0,0,0,.35);
+  transition: background-color .18s var(--ease), transform .18s var(--ease);
 }
-@keyframes grifo-brilho {
-  /* size 55%: posicao vira visivel entre -122% e +222% — endpoints alem
-     disso = brilho sai INTEIRO por um lado e reentra pelo outro, sem
-     lasca estacionada nem teleporte visivel */
-  0%, 55%   { background-position: -150% 88%, 0 0; }
-  78%, 100% { background-position: 260% 88%, 0 0; }
+.hero-scroll:hover { background: #0D4497; transform: translateY(3px); }
+@media (min-width: 860px) { .hero-scroll { display: grid; } }
+/* convite sutil: a seta acena. transform no SVG interno pra não brigar
+   com o translateY do hover no <a> */
+.hero-scroll svg { animation: seta-acena 2.4s ease-in-out infinite; }
+@keyframes seta-acena {
+  0%, 55%, 100% { transform: translateY(0); }
+  30%           { transform: translateY(4px); }
 }
-
-/* na entrada (com JS): a tinta entra vazia e se desenha ao pousar */
-.js .hero-title .grifo { background-size: 55% 32%, 0% 100%; }
-.is-loaded .hero-title .grifo {
-  animation:
-    grifo-risca .85s var(--ease) .9s forwards,
-    grifo-brilho 5s ease-in-out 2.2s infinite;
-}
-@keyframes grifo-risca { to { background-size: 55% 32%, 100% 100%; } }
+.hero-scroll:hover svg { animation-play-state: paused; }
 
 /* halo respira: a página nunca fica parada (micro-opacidade, sem gate) */
 .hero-halo {
@@ -428,20 +522,45 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 /* ---------- seções ---------- */
 .section { padding: clamp(3rem, 7vw, 5.5rem) 0; }
-.section-alt { background: var(--porcelain-2); }
+/* Alternância de cor por seção (pedido do user): azul, branca, azul...
+   hero AZUL -> quem BRANCA -> trajetória AZUL -> propostas BRANCA ->
+   depoimentos AZUL -> participar BRANCA -> rodapé escuro.
+   Seção azul = .section-dark (+ data-header-dark p/ o header camaleão). */
+.section-dark { background: var(--slate); color: var(--chalk); }
+.section-dark .section-kicker { color: #C2C9DE; }
+.section-dark .n-lead, .section-dark .n-fecho { color: var(--chalk); }
+/* trajetória sobre navy: marcadores e linha clareiam */
+.section-dark .trajeto > li > p { color: #C2C9DE; }
+.section-dark .trajeto strong { color: #fff; }
+.section-dark .trajeto > li::before { background: var(--slate); border-color: var(--brand-lit); }
+.section-dark .trajeto > li::after { background: rgba(233,234,242,.2); }
+.section-dark .tl-pulso { border-color: var(--brand-lit); }
+.section-dark .marcos li { color: #C2C9DE; }
+.section-dark .marcos li::before { background: var(--brand-lit); }
+/* depoimentos sobre navy */
+.section-dark .vdep figcaption { color: var(--brand-lit); }
+.section-dark .g-tile figcaption { color: #C2C9DE; }
 
-.section-head { margin-bottom: clamp(1.6rem, 3vw, 2.4rem); }
+.section-head { margin-bottom: clamp(1.6rem, 3vw, 2.6rem); }
+/* Títulos DISPLAY (pedido: "QUEM SOU EU bem grandão, estourando").
+   Caixa alta como no material oficial; o tamanho vence, então o peso 800
+   segura e o line-height fecha. Teto 5.2rem < 6rem (acima é grito). */
 .section-title {
-  font-size: clamp(1.7rem, 1.2rem + 2vw, 2.6rem);
+  /* Geometos: corpo recalibrado pra largura da fonte (DEPOIMENTOS tem que
+     caber em 390px). uppercase fica: é no-op na Geometos mas segura o
+     fallback Avenir no mesmo desenho */
+  font-size: clamp(1.9rem, 1.15rem + 3.6vw, 4.4rem);
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .015em;
+  line-height: 1;
+  text-wrap: balance;
 }
-.section-kicker { color: var(--ink-muted); margin: .6rem 0 0; max-width: 52ch; }
+.section-kicker { color: var(--ink-muted); margin: .8rem 0 0; max-width: 52ch; }
 
-/* margem do professor: régua fina à esquerda no desktop */
+/* o título display precisa da largura toda: a antiga coluna de 240px
+   ("margem do professor") não segura QUEM SOU EU em 5rem — vira fluxo único */
 .section-grid { display: grid; gap: 1.5rem; }
-@media (min-width: 860px) {
-  .section-grid { grid-template-columns: minmax(180px, 240px) 1fr; gap: 3rem; }
-}
 /* Quem sou eu: tese + ficha de tópicos (escaneável no mobile) */
 .quem-tese {
   font-size: clamp(1.2rem, 1.05rem + .8vw, 1.5rem);
@@ -458,14 +577,23 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   max-width: 58ch;
 }
 .perfil strong { color: var(--ink); font-weight: 600; }
-.ficha { list-style: none; margin: 0; padding: 0; max-width: 58ch; }
+/* ficha zebrada (pedido do user): linha azulzinha, linha branca, como tabela */
+.ficha {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 58ch;
+  border: 1px solid rgba(16,19,46,.08);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
 .ficha li {
-  padding: .8rem 0;
-  border-top: 1px solid rgba(26,37,41,.12);
+  padding: .75rem 1.1rem;
   color: var(--ink-muted);
   line-height: 1.45;
 }
-.ficha li:last-child { border-bottom: 1px solid rgba(26,37,41,.12); }
+.ficha li:nth-child(odd) { background: rgba(16,85,189,.09); }
+.ficha li:nth-child(even) { background: #fff; }
 .ficha strong { color: var(--ink); font-weight: 600; }
 
 /* ---------- lead / fecho de seção ---------- */
@@ -492,13 +620,13 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   width: 14px; height: 14px;
   border-radius: 50%;
   background: var(--porcelain-2);
-  border: 2.5px solid var(--amber);
+  border: 2.5px solid var(--brand);
   z-index: 1;
 }
 .trajeto > li::after {             /* linha conectora entre etapas */
   content: "";
   position: absolute; left: 6px; top: 1.5rem; bottom: 0;
-  width: 2px; background: rgba(26,37,41,.14);
+  width: 2px; background: rgba(16,19,46,.14);
 }
 .trajeto > li:last-child { padding-bottom: 0; }
 .trajeto > li:last-child::after { display: none; }
@@ -513,7 +641,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   left: 0; top: .4rem;
   width: 14px; height: 14px;
   border-radius: 50%;
-  border: 2px solid var(--amber);
+  border: 2px solid var(--brand);
   pointer-events: none;
   opacity: 0;
   animation: tl-pulsa 3.4s ease-out infinite;
@@ -537,10 +665,12 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .trajeto > li:nth-child(4)::before { animation: tl-mio 3.4s ease-in-out 1.5s infinite; }
 .trajeto > li:nth-child(5)::before { animation: tl-mio 3.4s ease-in-out 2s infinite; }
 
+/* cores do pisca via vars: a seção escura sobrescreve sem duplicar keyframes */
 @keyframes tl-mio {
-  0%, 40%, 100% { background: var(--porcelain-2); }
-  12%           { background: var(--amber); }
+  0%, 40%, 100% { background: var(--tl-idle, var(--porcelain-2)); }
+  12%           { background: var(--tl-hot, var(--brand)); }
 }
+.section-dark .trajeto { --tl-idle: var(--slate); --tl-hot: var(--brand-lit); }
 .trajeto h3 { font-size: clamp(1.2rem, 1.05rem + .7vw, 1.5rem); margin-bottom: .45rem; }
 .trajeto > li > p { margin: 0 0 .85rem; color: var(--ink-muted); }
 .trajeto strong { color: var(--ink); font-weight: 600; }
@@ -549,17 +679,21 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .marcos { list-style: none; margin: 0; padding: 0; }
 .marcos li {
   position: relative;
-  padding-left: 1.15rem;
-  margin-bottom: .4rem;
+  padding-left: 2.6rem;
+  margin-bottom: .5rem;
   font-size: .95rem;
   color: var(--ink-muted);
   line-height: 1.5;
 }
+/* o "traço" virou o símbolo oficial das ondas (mask = cor controlável).
+   30×13px: abaixo de ~12px de altura as 7 faixas viram borrão */
 .marcos li::before {
   content: "";
-  position: absolute; left: 0; top: .68em;
-  width: 8px; height: 2px;
-  background: var(--amber);
+  position: absolute; left: 0; top: .28em;
+  width: 30px; height: 13px;
+  background: var(--brand);
+  -webkit-mask: url("../public/assets/marca/ondas.svg") no-repeat center / contain;
+          mask: url("../public/assets/marca/ondas.svg") no-repeat center / contain;
 }
 .m-body .marcos { margin-top: .85rem; }
 
@@ -594,15 +728,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .p-card:last-child { margin-bottom: 0; }
 
 .p-card-inner {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1.3rem;
-  align-items: start;
   background: #fff;
-  border: 1px solid rgba(26,37,41,.10);
+  border: 1px solid rgba(16,19,46,.10);
   border-radius: var(--radius);
   padding: clamp(1.3rem, 3vw, 2rem);
-  box-shadow: 0 12px 32px rgba(23,38,43,.12);
+  box-shadow: 0 12px 32px rgba(26,23,78,.12);
   transform-origin: 50% 0;
 }
 
@@ -624,14 +754,6 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   }
 }
 
-.m-mark {
-  margin-top: .55rem;
-  width: 26px; height: 10px;
-  background: var(--amber);
-  border-radius: 2px;
-  transform: rotate(-2deg);
-  flex: none;
-}
 .m-body h3 { font-size: clamp(1.3rem, 1.1rem + 1vw, 1.7rem); margin-bottom: .35rem; }
 .m-body p { margin: 0; color: var(--ink-muted); max-width: 60ch; }
 
@@ -650,9 +772,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   padding: 1.5rem 1.6rem;
   background: var(--porcelain);
   border-radius: var(--radius);
-  border: 1px solid rgba(26,37,41,.10);
+  border: 1px solid rgba(16,19,46,.10);
 }
-.section-alt .quote { background: #fff; }
 .quote p {
   font-size: 1.12rem;
   font-style: italic;
@@ -663,7 +784,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-style: normal;
   font-size: .9rem;
   font-weight: 600;
-  color: var(--amber-text);
+  color: var(--brand);
 }
 
 /* depoimentos em vídeo: um horizontal + um vertical.
@@ -694,7 +815,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-family: var(--font-display);
   font-size: .9rem;
   font-weight: 600;
-  color: var(--amber-text);
+  color: var(--brand);
 }
 
 /* galeria: cada foto no formato real (sem corte).
@@ -721,20 +842,24 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   line-height: 1.35;
 }
 
-/* ---------- formulário ---------- */
-.section-form { background: var(--slate); color: var(--chalk); }
+/* ---------- formulário (seção BRANCA na alternância) ---------- */
+.section-form { background: var(--porcelain); color: var(--ink); }
 .form-grid { display: grid; gap: 2rem; }
 @media (min-width: 860px) {
   .form-grid { grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
 }
-.form-intro .section-title { color: var(--chalk); }
-.form-intro p { color: #cfcabe; max-width: 42ch; }
+.form-intro .section-title {
+  /* dentro da coluna do form-grid, o título cheio estoura: teto menor aqui */
+  font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.6rem);
+}
+.form-intro p { color: var(--ink-muted); max-width: 42ch; }
 
 .lead-form {
-  background: rgba(255,255,255,.04);
-  border: 1px solid var(--chalk-line);
+  background: #fff;
+  border: 1px solid rgba(16,19,46,.10);
   border-radius: var(--radius);
   padding: clamp(1.4rem, 3vw, 2rem);
+  box-shadow: 0 12px 32px rgba(26,23,78,.12);
 }
 .field { margin-bottom: 1.15rem; }
 .field label { display: block; font-size: .92rem; font-weight: 600; margin-bottom: .4rem; }
@@ -746,7 +871,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-size: 1.05rem;
   color: var(--ink);
   background: var(--porcelain);
-  border: 1.5px solid transparent;
+  border: 1.5px solid rgba(16,19,46,.16);  /* card branco: input precisa de borda */
   border-radius: var(--radius-sm);
 }
 .field input::placeholder { color: #5E666B; } /* AA 5.24:1 sobre porcelana */
@@ -760,10 +885,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-weight: 400;
   font-size: .92rem;
   line-height: 1.45;
-  color: #cfcabe;
+  color: var(--ink-muted);
   cursor: pointer;
 }
-.check input { width: 20px; height: 20px; margin-top: .12rem; accent-color: var(--amber); flex: none; }
+.check input { width: 20px; height: 20px; margin-top: .12rem; accent-color: var(--brand); flex: none; }
 
 /* ---- luz contornando o botão de envio ----
    conic-gradient girando atrás do botão, mascarado pra só aparecer na
@@ -784,15 +909,15 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   z-index: -1;
   border-radius: calc(var(--radius-sm) + 2px);
   padding: 2px;                       /* espessura do anel */
-  /* âmbar da marca, só que mais claro — cometa curto p/ leitura nítida */
+  /* card branco atrás: cometa em azul-marca CHEIO, senão some no claro */
   background: conic-gradient(from var(--luz-ang),
     transparent 0deg 268deg,
-    rgba(240,170,90,.30) 302deg,
-    rgba(250,193,124,.85) 338deg,
-    #FFD79B 356deg,
+    rgba(16,85,189,.35) 302deg,
+    rgba(16,85,189,.85) 338deg,
+    #1055BD 356deg,
     transparent 360deg);
   /* o brilho segue o formato mascarado, ou seja, acompanha o cometa */
-  filter: drop-shadow(0 0 4px rgba(240,170,90,.65));
+  filter: drop-shadow(0 0 4px rgba(16,85,189,.45));
   /* recorta o miolo: sobra só o anel */
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
           mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -810,8 +935,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .lead-form button[type="submit"]:hover::before,
 .lead-form button[type="submit"]:focus-visible::before { animation-play-state: paused; }
 
-.err { color: #ffcf9e; font-size: .85rem; margin: .4rem 0 0; font-family: var(--font-display); }
-.field input[aria-invalid="true"] { border-color: #e8a15e; }
+/* erro warm ESCURO agora que o form é claro (#9C4A00 = 5.5:1 sobre porcelana) */
+.err { color: #9C4A00; font-size: .85rem; margin: .4rem 0 0; font-family: var(--font-display); }
+.field input[aria-invalid="true"] { border-color: #C0680C; }
 
 .form-status {
   margin: 1.1rem 0 0;
@@ -819,28 +945,57 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   border-radius: var(--radius-sm);
   font-size: .96rem;
 }
-.form-status.ok { background: rgba(201,121,31,.16); border: 1px solid var(--amber); color: var(--chalk); }
-.form-status.bad { background: rgba(232,161,94,.14); border: 1px solid #e8a15e; color: #ffcf9e; }
+.form-status.ok { background: rgba(16,85,189,.10); border: 1px solid var(--brand); color: var(--ink); }
+.form-status.bad { background: rgba(156,74,0,.08); border: 1px solid #C0680C; color: #7D3B00; }
 
 /* honeypot: escondido de humanos, visível a bots */
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-/* ---------- rodapé ---------- */
-.site-footer { background: #10191d; color: var(--chalk); padding: 3rem 0 6rem; }
-.footer-inner { display: grid; gap: 1.6rem; }
-.footer-brand { display: flex; align-items: center; flex-wrap: wrap; gap: .8rem 1rem; }
-.footer-brand strong { display: block; font-family: var(--font-display); font-size: 1.1rem; }
-.footer-brand span { font-size: .85rem; color: #9aa4a9; }
-.footer-social { display: flex; flex-wrap: wrap; gap: 1.2rem; }
-.footer-social a { font-family: var(--font-display); font-size: .95rem; font-weight: 500; text-decoration: none; color: var(--chalk); }
-.footer-social a:hover { color: var(--amber); }
-.footer-social .wa { color: var(--amber); }
-.footer-legal { font-size: .8rem; color: #7f898e; line-height: 1.6; margin: 0; max-width: 60ch; }
-.footer-legal a { color: var(--chalk); text-decoration: underline; text-underline-offset: 2px; }
-.footer-legal a:hover { color: var(--amber); }
+/* ---------- rodapé: 2 colunas (contato | candidatura oficial) ---------- */
+.site-footer { background: #0C1024; color: var(--chalk); padding: 3rem 0 6rem; }
+.footer-cols { display: grid; gap: 2.4rem; margin-bottom: 2.4rem; }
 @media (min-width: 780px) {
-  .footer-inner { grid-template-columns: 1fr auto; align-items: center; }
-  .footer-legal { grid-column: 1 / -1; }
+  /* colunas centradas na vertical + contato em matriz 2x2: simetria com
+     o bloco da candidatura à direita */
+  .footer-cols { grid-template-columns: 1fr auto; gap: 2.5rem; align-items: center; }
+  /* .footer-col.footer-social: vence o display:flex do .footer-col,
+     que vem depois na cascata */
+  .footer-col.footer-social {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 1.3rem 3.5rem;
+  }
+}
+.footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; }
+.footer-cargo { font-family: var(--font-display); font-size: .9rem; color: #9BA3C2; }
+.footer-social a {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--chalk);
+}
+.footer-social a:hover { color: var(--brand-lit); }
+.footer-chapa { margin: 0; font-size: .85rem; color: #9BA3C2; line-height: 1.5; }
+.footer-chapa a { color: var(--chalk); text-decoration: underline; text-underline-offset: 2px; }
+.footer-chapa a:hover { color: var(--brand-lit); }
+.footer-legal {
+  font-size: .8rem;
+  color: #7B84A8;
+  line-height: 1.6;
+  margin: 0;
+  border-top: 1px solid var(--chalk-line);
+  padding-top: 1.4rem;
+}
+.footer-party { height: 22px; width: auto; opacity: .85; }
+/* arte oficial da campanha (material impresso) */
+/* lockup vetorial transparente: branco + acento claro sobre o navy do rodapé */
+.footer-official {
+  display: block;
+  width: 200px;
+  height: 100px;               /* viewBox 825.9x413.1 = 2:1 */
+  color: #fff;
+  --logo-acc: var(--brand-lit);
 }
 
 /* ---------- barra fixa mobile: participar + WhatsApp ---------- */
@@ -859,8 +1014,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   justify-content: center;
   min-height: 48px;
   padding: .95rem;
-  background: var(--amber);
-  color: var(--ink);
+  background: var(--brand);
+  color: #fff;
   font-family: var(--font-display);
   font-weight: 700;
   text-decoration: none;
@@ -874,45 +1029,49 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   justify-content: center;
   width: 54px; min-height: 48px;
   background: var(--slate);
-  color: var(--amber);
   border: 1px solid var(--chalk-line);
   border-radius: 10px;
   text-decoration: none;
   box-shadow: 0 8px 24px rgba(0,0,0,.25);
 }
 .mobile-wa .wa-icon { width: 22px; height: 22px; }
-.mobile-wa:hover { color: var(--amber-lit); }
 @media (min-width: 860px) { .mobile-bar { display: none; } }
 
 /* ---------- WhatsApp: canal direto ---------- */
 .svg-sprite { display: none; }
+/* pedido do user: número em cor de texto normal, SÓ a logo no verde
+   oficial do WhatsApp, sempre DEPOIS do número. Verde #25D366 sobre os
+   navies do site passa folgado (fundo claro não tem instância de WA). */
 .wa-icon {
   width: 1.05em; height: 1.05em;
   flex: 0 0 auto;
   vertical-align: -.18em;
+  color: #25D366;
 }
-/* link do número: sempre sobre ardósia (hero e seção do form).
-   --amber cru dá 3.97:1 no topo claro do gradiente do hero (#1E323A) e reprova AA;
-   --amber-lit dá 5.27:1 no pior caso. Não trocar por var(--amber) aqui. */
 .wa-inline {
   display: inline-flex;
   align-items: center;
   gap: .4rem;
-  color: var(--amber-lit);
+  color: var(--chalk);
   font-family: var(--font-display);
   font-weight: 600;
   text-decoration: none;
-  border-bottom: 1px solid rgba(224,145,58,.5);
+  border-bottom: 1px solid rgba(233,234,242,.4);
   padding-bottom: 1px;
   transition: color .18s var(--ease), border-color .18s var(--ease);
 }
-.wa-inline:hover { color: var(--chalk); border-bottom-color: var(--chalk); }
+.wa-inline:hover { color: #fff; border-bottom-color: #fff; }
+/* "Ou fale direto com a equipe": legível, não nota de rodapé */
 .hero-direct,
 .form-direto {
   margin: 1.1rem 0 0;
-  font-size: .95rem;
-  color: #cfcabe;
+  font-size: 1.08rem;
+  color: var(--chalk);
 }
+/* form agora é claro: número em tinta, sublinhado escuro */
+.form-direto { color: var(--ink); }
+.section-form .wa-inline { color: var(--ink); border-bottom-color: rgba(16,19,46,.35); }
+.section-form .wa-inline:hover { color: var(--brand); border-bottom-color: var(--brand); }
 .footer-social .wa { display: inline-flex; align-items: center; gap: .4rem; }
 /* ação de WhatsApp na mensagem de sucesso/erro do form */
 .form-status .wa-go {
@@ -920,21 +1079,21 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   align-items: center;
   gap: .4rem;
   margin-top: .6rem;
-  color: var(--chalk);
+  color: var(--ink);
   font-family: var(--font-display);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.form-status .wa-go:hover { color: var(--amber); }
+.form-status .wa-go:hover { color: var(--brand); }
 
 /* ---------- motion ---------- */
 .reveal { opacity: 0; transform: translateY(18px); }
 .reveal.in { opacity: 1; transform: none; transition: opacity .6s var(--ease), transform .6s var(--ease); }
 
 /* orquestração de entrada do hero (só quando há JS; .js evita flash) */
-.js .hero-copy > *, .js .hero-photo { opacity: 0; transform: translateY(16px); }
-.is-loaded .hero-copy > *, .is-loaded .hero-photo {
+.js .hero-copy > *, .js .hero-photo, .js .hero-plate { opacity: 0; transform: translateY(16px); }
+.is-loaded .hero-copy > *, .is-loaded .hero-photo, .is-loaded .hero-plate {
   opacity: 1; transform: none;
   transition: opacity .7s var(--ease), transform .7s var(--ease);
 }
@@ -943,9 +1102,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .is-loaded .hero-copy > *:nth-child(3) { transition-delay: .28s; }
 .is-loaded .hero-copy > *:nth-child(4) { transition-delay: .40s; }
 .is-loaded .hero-photo { transition-delay: .18s; }
+.is-loaded .hero-plate { transition-delay: .32s; }
 
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
   .reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
-  .js .hero-copy > *, .js .hero-photo { opacity: 1; transform: none; }
+  .js .hero-copy > *, .js .hero-photo, .js .hero-plate { opacity: 1; transform: none; }
 }
