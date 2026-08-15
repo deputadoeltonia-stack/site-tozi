@@ -1051,7 +1051,15 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   border-top: 1px solid var(--chalk-line);
   padding-top: 1.4rem;
 }
-.footer-party { height: 22px; width: auto; opacity: .85; }
+/* marca do partido: a Federação União Progressista é um lockup LARGO
+   (460x78 ~ 5.9:1), diferente do antigo brasão do União Brasil que era
+   quase quadrado — por isso agora a medida que manda é a largura. */
+.footer-party {
+  width: min(190px, 66%);   /* mesma medida do site do Dr. Elton */
+  height: auto;
+  margin-top: 1.1rem;       /* respiro: colada na linha da chapa ficava espremida */
+  opacity: .92;
+}
 /* arte oficial da campanha (material impresso) */
 /* lockup vetorial transparente: branco + acento claro sobre o navy do rodapé */
 .footer-official {
