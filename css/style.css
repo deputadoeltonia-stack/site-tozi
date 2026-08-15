@@ -22,7 +22,7 @@
   --slate: #1A174E;       /* Pantone 274C — hero/rodapé — o "quadro" */
   --slate-2: #001A6D;     /* Pantone 280C — realce do gradiente */
   --ink: #10132E;         /* texto — navy quase preto, 16.3:1 sobre porcelana */
-  --ink-muted: #4A5578;   /* texto secundário — 6.58:1 sobre porcelana */
+  --ink-muted: #3A4462;   /* texto secundário — 8.62:1 sobre porcelana (escurecido a pedido) */
   --brand: #1055BD;       /* Pantone 2132C — acento único (identidade oficial) */
   --brand-lit: #6490D4;   /* azul claro p/ TEXTO/ícone sobre navy — 4.74:1 no pior caso (slate-2) */
   --chalk: #E9EAF2;       /* texto/linhas sobre navy */
@@ -421,7 +421,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   color: #202051;
   border-color: #fff;
   font-weight: 700;
-  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+  box-shadow: 0 20px 46px rgba(0,0,0,.55);
 }
 .hero .btn-cta:hover,
 .hero .btn-ghost:hover { background: var(--chalk); border-color: var(--chalk); }
@@ -655,7 +655,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   color: var(--ink-muted);
   line-height: 1.45;
 }
-.ficha li:nth-child(odd) { background: rgba(16,85,189,.14); }
+.ficha li:nth-child(odd) { background: rgba(16,85,189,.20); }
 .ficha li:nth-child(even) { background: #fff; }
 .ficha strong { color: var(--ink); font-weight: 600; }
 
