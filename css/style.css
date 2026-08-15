@@ -577,24 +577,20 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   max-width: 58ch;
 }
 .perfil strong { color: var(--ink); font-weight: 600; }
-/* ficha zebrada (pedido do user): linha azulzinha, linha branca, como tabela */
-.ficha {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-width: 58ch;
-  border: 1px solid rgba(16,19,46,.08);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
+/* ficha com réguas (layout original) e zebra só na COR DO TEXTO:
+   linha azul-marca, linha tinta. Versão de FUNDO zebrado ficou salva no
+   commit "Identidade oficial TOZI ID" — restaurar de lá se ele preferir. */
+.ficha { list-style: none; margin: 0; padding: 0; max-width: 58ch; }
 .ficha li {
-  padding: .75rem 1.1rem;
-  color: var(--ink-muted);
+  padding: .8rem 0;
+  border-top: 1px solid rgba(16,19,46,.12);
   line-height: 1.45;
 }
-.ficha li:nth-child(odd) { background: rgba(16,85,189,.09); }
-.ficha li:nth-child(even) { background: #fff; }
-.ficha strong { color: var(--ink); font-weight: 600; }
+.ficha li:last-child { border-bottom: 1px solid rgba(16,19,46,.12); }
+.ficha li:nth-child(odd) { color: var(--slate-2); }     /* azul escuro oficial (Pantone 280C) */
+.ficha li:nth-child(even) { color: var(--ink-muted); }
+.ficha li:nth-child(even) strong { color: var(--ink); font-weight: 600; }
+.ficha li:nth-child(odd) strong { color: inherit; font-weight: 600; }
 
 /* ---------- lead / fecho de seção ---------- */
 .n-lead {
@@ -967,14 +963,26 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   }
 }
 .footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; }
+/* rosto ilustrado (pág 5 do ID) ao lado da marca */
+.footer-col-oficial { flex-direction: row; align-items: flex-end; gap: 1.4rem; }
+.footer-rosto { width: clamp(84px, 8vw, 118px); height: auto; flex: none; }
+.footer-oficial-textos { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; }
 .footer-cargo { font-family: var(--font-display); font-size: .9rem; color: #9BA3C2; }
 .footer-social a {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
   font-family: var(--font-display);
   font-size: .95rem;
   font-weight: 500;
   text-decoration: none;
   color: var(--chalk);
 }
+/* logos nas cores oficiais de cada rede (mesma regra do WhatsApp verde) */
+.soc-icon { width: 1.1em; height: 1.1em; flex: none; }
+.soc-ig { color: #E4405F; }
+.soc-fb { color: #1877F2; }
+.soc-mail { color: var(--brand-lit); }
 .footer-social a:hover { color: var(--brand-lit); }
 .footer-chapa { margin: 0; font-size: .85rem; color: #9BA3C2; line-height: 1.5; }
 .footer-chapa a { color: var(--chalk); text-decoration: underline; text-underline-offset: 2px; }
@@ -1047,6 +1055,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   flex: 0 0 auto;
   vertical-align: -.18em;
   color: #25D366;
+}
+/* hero: logo antes do número SÓ no celular (pedido); desktop = logo no fim */
+@media (min-width: 860px) {
+  .hero-direct .wa-inline .wa-icon { order: 2; }
 }
 .wa-inline {
   display: inline-flex;

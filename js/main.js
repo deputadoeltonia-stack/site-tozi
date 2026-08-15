@@ -173,7 +173,7 @@
       use.setAttribute("href", "#i-wa");
       svg.appendChild(use);
       a.appendChild(document.createTextNode(acaoWa.rotulo + " "));
-      a.appendChild(svg);                       // logo do WhatsApp depois do texto/número
+      a.appendChild(svg);                       // como estava: logo no fim (padrão só mudou no rodapé)
       status.appendChild(a);
     }
     status.hidden = false;
