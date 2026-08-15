@@ -52,6 +52,16 @@
     t("wa href no HTML bate com o JS",
       Array.prototype.every.call(document.querySelectorAll('a[href*="wa.me"]'),
         (a) => a.getAttribute("href").indexOf("wa.me/" + WA_NUMERO) > 0));
+    // SplitText: roda num nó solto, sem depender de fonte carregada nem de scroll
+    const probe = document.createElement("h2");
+    probe.textContent = "Quem sou eu";
+    splitTitulo(probe);
+    t("splittext preserva o texto", probe.textContent === "Quem sou eu");
+    t("splittext gera uma span por letra", probe.querySelectorAll(".st-c").length === 9);
+    t("splittext preserva os espacos", probe.querySelectorAll(".st-w").length === 3);
+    t("splittext indexa o stagger de 0 a n-1",
+      probe.querySelectorAll(".st-c")[8].style.getPropertyValue("--i").trim() === "8");
+    t("splittext mantem a frase pro leitor de tela", probe.getAttribute("aria-label") === "Quem sou eu");
     const fails = r.filter((x) => !x).length;
     console.log("[selftest] " + (r.length - fails) + "/" + r.length + " passaram" + (fails ? " — FALHOU" : ""));
     return fails;
@@ -93,13 +103,86 @@
     history.replaceState(null, "", id === "#topo" ? location.pathname : id);
   });
 
+  /* ============ SplitText (porte vanilla do React Bits) ============
+     Original: GSAP + ScrollTrigger + plugin SplitText. Aqui: quebra em
+     letras + IntersectionObserver + transition com delay por índice (--i).
+     O texto vira spans, então o leitor de tela ganha aria-label com a frase
+     inteira e o miolo partido vai como aria-hidden — senão soletra letra
+     a letra. */
+  function splitTitulo(el) {
+    const txt = el.textContent;
+    el.setAttribute("aria-label", txt);
+    const holder = document.createElement("span");
+    holder.setAttribute("aria-hidden", "true");
+    let i = 0;
+    txt.split(/(\s+)/).forEach((pedaco) => {
+      if (pedaco === "") return;
+      if (/^\s+$/.test(pedaco)) { holder.appendChild(document.createTextNode(pedaco)); return; }
+      const palavra = document.createElement("span");
+      palavra.className = "st-w";                 // não deixa quebrar linha no meio da palavra
+      Array.from(pedaco).forEach((ch) => {
+        const c = document.createElement("span");
+        c.className = "st-c";
+        c.style.setProperty("--i", String(i++));
+        c.textContent = ch;                       // textContent, nunca innerHTML
+        palavra.appendChild(c);
+      });
+      holder.appendChild(palavra);
+    });
+    el.textContent = "";
+    el.appendChild(holder);
+  }
+
+  function initSplitTitles() {
+    if (!("IntersectionObserver" in window)) return;
+    // só títulos de texto puro: um <strong> dentro viraria letra solta
+    const titles = Array.prototype.filter.call(
+      document.querySelectorAll(".section-title"),
+      (el) => el.childNodes.length === 1 && el.firstChild.nodeType === 3
+    );
+    if (!titles.length) return;
+    function liga() {
+      titles.forEach(splitTitulo);
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.1 });
+      titles.forEach((t) => io.observe(t));
+      // failsafe: letras nascem em opacity 0 — IO que não dispara = seção sem título
+      setTimeout(() => titles.forEach((t) => t.classList.add("in")), 2500);
+    }
+    // partir antes da Geometos carregar mede as letras na fonte errada e o
+    // título salta quando ela chega
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(liga);
+    else liga();
+  }
+
+  /* ============ SpotlightCard (porte vanilla do React Bits) ============
+     Luz radial segue o cursor. Um mousemove delegado na .stack em vez de
+     um por card. Sem gate de reduced-motion: é resposta a gesto do usuário
+     e só mexe em opacidade/cor, igual à régua de leitura. */
+  function initSpotlight() {
+    const stack = document.getElementById("propostas-stack");
+    if (!stack) return;
+    stack.addEventListener("mousemove", (e) => {
+      const card = e.target.closest(".p-card-inner");
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mouse-x", (e.clientX - r.left) + "px");
+      card.style.setProperty("--mouse-y", (e.clientY - r.top) + "px");
+    }, { passive: true });
+  }
+
   /* ============ reveal no scroll ============ */
   function initReveal() {
     if (prefersReduced || !("IntersectionObserver" in window)) return;
     // .stack fica de fora: tem motion próprio (sticky+scale), e transform
     // de reveal num ancestral quebraria o position:sticky dos cards
+    // .section-head saiu: o título agora entra sozinho pelo SplitText —
+    // fade do bloco + stagger das letras juntos embaçava os dois
     const targets = document.querySelectorAll(
-      ".section-head, .section-body, .quotes, .gallery, .form-grid"
+      ".section-kicker, .section-body, .quotes, .gallery, .form-grid"
     );
     targets.forEach((t) => t.classList.add("reveal"));
     const io = new IntersectionObserver((entries) => {
@@ -253,6 +336,8 @@
     document.body.classList.add("is-loaded");
     initHeaderTheme();
     initReveal();
+    initSplitTitles();
+    initSpotlight();
     initForm();
     if (location.search.indexOf("selftest") !== -1) selftest();
   }

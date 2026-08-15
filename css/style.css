@@ -1121,3 +1121,50 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
   .js .hero-copy > *, .js .hero-photo, .js .hero-plate { opacity: 1; transform: none; }
 }
+
+/* ---------- SplitText (porte vanilla do React Bits) ----------
+   Título entra letra a letra ao chegar na tela. O original usa GSAP +
+   ScrollTrigger + plugin SplitText; aqui é IntersectionObserver + delay
+   por índice, mesmo desenho e zero dependência.
+   Regra da casa: OPACIDADE sem gate de reduced-motion (o ambiente do user
+   força reduce e ele precisa ver a entrada); só o translateY é gateado. */
+.section-title .st-w { display: inline-block; white-space: nowrap; }
+.section-title .st-c {
+  display: inline-block;
+  opacity: 0;
+  transition: opacity .5s var(--ease) calc(var(--i) * 28ms);
+}
+.section-title.in .st-c { opacity: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .section-title .st-c {
+    transform: translateY(.42em);
+    transition: opacity .5s var(--ease) calc(var(--i) * 28ms),
+                transform .62s var(--ease) calc(var(--i) * 28ms);
+  }
+  .section-title.in .st-c { transform: none; }
+}
+
+/* ---------- SpotlightCard (porte vanilla do React Bits) ----------
+   Luz radial segue o cursor sobre o card de proposta.
+   Só em ponteiro fino: no toque não existe hover e o efeito seria peso morto.
+   NADA de transform aqui — o .p-card-inner já recebe scale da timeline do
+   stack e o pai é position:sticky; mexer em transform brigaria com os dois.
+   border-radius:inherit no ::before dispensa overflow:hidden (que criaria
+   um contexto de scroll colado no sticky). */
+@media (hover: hover) {
+  .p-card-inner { position: relative; --mouse-x: 50%; --mouse-y: 50%; }
+  .p-card-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--mouse-x) var(--mouse-y),
+                rgba(16, 85, 189, .11), transparent 72%);
+    opacity: 0;
+    transition: opacity .45s var(--ease);
+    pointer-events: none;
+  }
+  .p-card-inner:hover::before,
+  .p-card-inner:focus-within::before { opacity: 1; }
+}
