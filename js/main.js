@@ -138,6 +138,11 @@
     if (!header) return;
     const darks = Array.prototype.slice.call(document.querySelectorAll("[data-header-dark]"));
     if (!darks.length) return;
+    /* a capa é sticky: o rect dela cruza a linha do header a rolagem INTEIRA.
+       Sem isso o header ficaria preso na pele clara pra sempre. A capa só
+       conta como escura enquanto a folha não a cobriu. */
+    const capa = document.querySelector(".hero");
+    const folha = document.querySelector(".folha");
     let ticking = false;
     function apply() {
       ticking = false;
@@ -145,7 +150,9 @@
          bottom do header sticky — sondar dentro da faixa do header nunca
          encosta no hero e o topo ficava com a pele clara errada */
       const linha = header.getBoundingClientRect().bottom + 1;
+      const capaCoberta = !!(folha && folha.getBoundingClientRect().top <= linha);
       const sobreEscuro = darks.some(function (el) {
+        if (el === capa && capaCoberta) return false;
         const r = el.getBoundingClientRect();
         return r.top <= linha && r.bottom >= linha;
       });

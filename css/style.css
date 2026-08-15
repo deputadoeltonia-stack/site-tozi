@@ -288,8 +288,17 @@ a:focus-visible, button:focus-visible, input:focus-visible {
    bg #202051 chapado · ondas #0C62AE x0->64.8% na metade inferior ·
    manchete a 6.3% / 33% · placa direita a 5.7% da borda, topo 44% ·
    botão de scroll ~79% x / 87% y */
+/* ---------- CAPA + FOLHA (porte da ideia do ScrollExpand p/ a abertura) ----------
+   A capa (hero) fica PRESA no topo e o site inteiro é uma folha opaca que
+   sobe por cima dela. Abre o site = só a capa; rolar = a folha cobre a capa
+   e entrega as seções. Efeito 1:1 com o gesto, sem JS.
+
+   Degrada sozinho: browser sem position:sticky devolve o fluxo normal de
+   hoje (capa em cima, seções embaixo) — não existe estado em que algo suma. */
 .hero {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 0;
   background: #202051;
   color: var(--chalk);
   padding: clamp(2.5rem, 6vw, 5rem) 0 0;
@@ -308,6 +317,53 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   background: url("../public/assets/marca/ondas-hero.svg") no-repeat 0 0 / 100% 100%;
   pointer-events: none;
 }
+/* véu: a capa escurece conforme a folha a cobre, pra ela recuar em vez de
+   só "sumir atrás". scroll(root) é o mesmo timeline da régua de leitura do
+   header, já em produção aqui. Sem gate de reduced-motion: é opacidade
+   ligada ao gesto de rolagem, não movimento autônomo. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #0A0C22;
+  opacity: 0;
+  pointer-events: none;
+}
+@supports (animation-timeline: scroll()) {
+  .hero::after {
+    animation: capa-recua linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 82vh;          /* some no primeiro "tela cheia" de rolagem */
+  }
+  @keyframes capa-recua { from { opacity: 0; } to { opacity: .62; } }
+}
+
+/* Trilho da capa: é ele que define POR QUANTO TEMPO ela fica presa.
+   Sem trilho, o sticky durava o <main> inteiro — a capa virava um fundo fixo
+   pintado a página toda (o "popup por cima do fundo" que não queremos), e essa
+   camada gigante sempre viva é o que piscava o fundo antigo no scroll rápido.
+   Com o trilho, assim que a folha cobre, a capa SOLTA, sobe e sai da tela: o
+   fundo passa a ser das seções, de verdade.
+
+   O padding do trilho e a margem negativa da folha se cancelam — a altura
+   total da página e a distância da revelação continuam exatamente as de antes. */
+.capa-trilho {
+  height: 140vh;
+  height: 140svh;   /* svh: barra do navegador móvel não altera o trilho */
+}
+
+/* a folha: o site inteiro deslizando sobre a capa */
+.folha {
+  position: relative;
+  z-index: 1;
+  margin-top: -140vh;
+  margin-top: -140svh;
+  background: var(--porcelain);
+  border-radius: 26px 26px 0 0;
+  box-shadow: 0 -20px 52px rgba(10,12,34,.42);
+}
+
 .hero-grid { position: relative; z-index: 1; }
 .hero-grid {
   display: grid;

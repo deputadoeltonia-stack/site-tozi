@@ -22,7 +22,7 @@
   <!-- fontes oficiais do TOZI ID servidas localmente (Google Fonts saiu) -->
   <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/geometos.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/avenir-400.woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=40">
+  <link rel="stylesheet" href="css/style.css?v=45">
 </head>
 <body>
 
@@ -49,6 +49,9 @@
   <main>
 
     <!-- HERO -->
+    <!-- trilho da capa: define por quanto tempo ela fica presa. Quando
+         acaba, a capa solta e sai da tela — o fundo passa a ser das seções. -->
+    <div class="capa">
     <section class="hero" id="topo" data-header-dark>
       <div class="hero-stage">
       <div class="wrap hero-grid">
@@ -97,6 +100,16 @@
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M12 4v14m-6-6l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </section>
+      <!-- espaçador do trilho: precisa ser um ELEMENTO. O sticky é limitado
+           pelo content box do pai, e padding fica fora dele — por isso um
+           padding-bottom no .capa não segurava a capa presa. -->
+      <div class="capa-trilho" aria-hidden="true"></div>
+    </div><!-- /capa -->
+
+    <!-- A FOLHA: todo o site depois da capa. Sobe por cima do hero, que
+         fica preso ao fundo. Cantos e sombra no topo entregam a leitura de
+         "folha deslizando sobre a capa". -->
+    <div class="folha">
 
     <!-- QUEM SOU EU -->
     <section class="section" id="quem">
@@ -473,6 +486,7 @@
       </div>
     </section>
 
+    </div><!-- /folha -->
   </main>
 
   <footer class="site-footer" data-header-dark>
@@ -517,6 +531,6 @@
     </a>
   </div>
 
-  <script src="js/main.js?v=8" defer></script>
+  <script src="js/main.js?v=9" defer></script>
 </body>
 </html>
