@@ -22,7 +22,10 @@
   --slate: #1A174E;       /* Pantone 274C — hero/rodapé — o "quadro" */
   --slate-2: #001A6D;     /* Pantone 280C — realce do gradiente */
   --ink: #10132E;         /* texto — navy quase preto, 16.3:1 sobre porcelana */
-  --ink-muted: #3A4462;   /* texto secundário — 8.62:1 sobre porcelana (escurecido a pedido) */
+  /* o "secundário" agora é o MESMO tom do principal: o user pediu todo texto
+     de fundo claro na cor da tese ("Acredito que a política..."), que herda
+     --ink. Token mantido para as seções escuras seguirem sobrescrevendo. */
+  --ink-muted: #10132E;
   --brand: #1055BD;       /* Pantone 2132C — acento único (identidade oficial) */
   --brand-lit: #6490D4;   /* azul claro p/ TEXTO/ícone sobre navy — 4.74:1 no pior caso (slate-2) */
   --chalk: #E9EAF2;       /* texto/linhas sobre navy */
@@ -397,8 +400,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   height: auto;
 }
 .hero-title {
-  /* pág 6: 51px em 1920 = 2.65vw, 2 linhas, entrelinha 1.06, sem ponto */
-  font-size: clamp(1.55rem, 2.65vw, 2.6rem);
+  /* pág 6: 2 linhas. A manchete nova é mais longa que o slogan do guia, então
+     o corpo cede um pouco para cada frase caber na SUA linha — o <br> separa
+     as duas e sem esse ajuste "VIDAS." ficava órfão numa linha só. */
+  font-size: clamp(1.4rem, 2.15vw, 2rem);
   font-weight: 700;
   letter-spacing: .01em;
   line-height: 1.12;
@@ -421,7 +426,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   color: #202051;
   border-color: #fff;
   font-weight: 700;
-  box-shadow: 0 20px 46px rgba(0,0,0,.55);
+  box-shadow: 0 8px 16px rgba(0,0,0,.38), 0 28px 64px rgba(0,0,0,.72);
 }
 .hero .btn-cta:hover,
 .hero .btn-ghost:hover { background: var(--chalk); border-color: var(--chalk); }
@@ -492,7 +497,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     position: absolute;
     left: 6.3%;
     top: 27%;
-    width: min(40vw, 580px);
+    width: min(43vw, 630px);   /* manchete nova é mais longa: a coluna cede 50px */
     z-index: 2;
   }
   .hero-photo {
