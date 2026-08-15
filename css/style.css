@@ -227,7 +227,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   color: var(--slate);
   border-radius: 6px;
   padding: .2rem .5rem .25rem;
-  font-size: .95rem;
+  font-size: 1rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   letter-spacing: .05em;
@@ -238,7 +238,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .nav a {
   text-decoration: none;
   font-weight: 500;
-  font-size: .98rem;
+  font-size: 1.02rem;
   color: #C2C9DE;                    /* pele navy -> nav claro */
   padding: .3rem 0;
   position: relative;
@@ -387,7 +387,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-family: var(--font-display);
   font-weight: 700;
   /* pág 6: cargo ocupa a mesma largura da placa (tracking abre a linha) */
-  font-size: clamp(.78rem, 1.35vw, 1.3rem);
+  font-size: clamp(.88rem, 1.35vw, 1.3rem);
   letter-spacing: .3em;
   text-transform: uppercase;
   color: #fff;
@@ -481,7 +481,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-size: 3rem; font-weight: 800;
   color: rgba(233,234,242,.4);
 }
-.hero-photo.no-photo .hero-photo-fallback small { font-family: var(--font-display); font-size: .72rem; }
+.hero-photo.no-photo .hero-photo-fallback small { font-family: var(--font-display); font-size: .8rem; }
 
 @media (min-width: 860px) {
   /* palco absoluto com as coordenadas da pág 6 (grid não reproduz a
@@ -498,6 +498,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     left: 6.3%;
     top: 27%;
     width: min(43vw, 630px);   /* manchete nova é mais longa: a coluna cede 50px */
+  }
+  .hero-title {
+    /* piso menor que o do mobile: entre 860 e 1200 a coluna é estreita e o
+       piso de 1.4rem forçava a frase a quebrar em 4 linhas */
+    font-size: clamp(1.15rem, 2.15vw, 2rem);
     z-index: 2;
   }
   .hero-photo {
@@ -636,7 +641,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .quem-valores { margin: 1.7rem 0 0; max-width: 60ch; color: var(--ink-muted); }
 .perfil {
   margin: 1.6rem 0 0;
-  font-size: .95rem;
+  font-size: 1.02rem;
   color: var(--ink-muted);
   max-width: 58ch;
 }
@@ -749,7 +754,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   position: relative;
   padding-left: 2.6rem;
   margin-bottom: .5rem;
-  font-size: .95rem;
+  font-size: 1.02rem;
   color: var(--ink-muted);
   line-height: 1.5;
 }
@@ -850,7 +855,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .quote-lg p { font-size: clamp(1.3rem, 1.1rem + 1vw, 1.7rem); line-height: 1.4; }
 .quote cite {
   font-style: normal;
-  font-size: .9rem;
+  font-size: .98rem;
   font-weight: 600;
   color: var(--brand);
 }
@@ -881,7 +886,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .vdep figcaption {
   margin-top: .6rem;
   font-family: var(--font-display);
-  font-size: .9rem;
+  font-size: .98rem;
   font-weight: 600;
   color: var(--brand);
 }
@@ -905,7 +910,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .g-tile figcaption {
   margin-top: .55rem;
   font-family: var(--font-display);
-  font-size: .82rem;
+  font-size: .92rem;
   color: var(--ink-muted);
   line-height: 1.35;
 }
@@ -930,7 +935,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   box-shadow: 0 12px 32px rgba(26,23,78,.12);
 }
 .field { margin-bottom: 1.15rem; }
-.field label { display: block; font-size: .92rem; font-weight: 600; margin-bottom: .4rem; }
+.field label { display: block; font-size: .98rem; font-weight: 600; margin-bottom: .4rem; }
 .field input[type="text"],
 .field input[type="tel"] {
   width: 100%;
@@ -951,7 +956,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   align-items: start;
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: .92rem;
+  font-size: .98rem;
   line-height: 1.45;
   color: var(--ink-muted);
   cursor: pointer;
@@ -1004,14 +1009,14 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .lead-form button[type="submit"]:focus-visible::before { animation-play-state: paused; }
 
 /* erro warm ESCURO agora que o form é claro (#9C4A00 = 5.5:1 sobre porcelana) */
-.err { color: #9C4A00; font-size: .85rem; margin: .4rem 0 0; font-family: var(--font-display); }
+.err { color: #9C4A00; font-size: .92rem; margin: .4rem 0 0; font-family: var(--font-display); }
 .field input[aria-invalid="true"] { border-color: #C0680C; }
 
 .form-status {
   margin: 1.1rem 0 0;
   padding: .9rem 1rem;
   border-radius: var(--radius-sm);
-  font-size: .96rem;
+  font-size: 1.02rem;
 }
 .form-status.ok { background: rgba(16,85,189,.10); border: 1px solid var(--brand); color: var(--ink); }
 .form-status.bad { background: rgba(156,74,0,.08); border: 1px solid #C0680C; color: #7D3B00; }
@@ -1039,13 +1044,13 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .footer-col-oficial { flex-direction: row; align-items: flex-end; gap: 1.4rem; }
 .footer-rosto { width: clamp(84px, 8vw, 118px); height: auto; flex: none; }
 .footer-oficial-textos { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; }
-.footer-cargo { font-family: var(--font-display); font-size: .9rem; color: #9BA3C2; }
+.footer-cargo { font-family: var(--font-display); font-size: .98rem; color: #9BA3C2; }
 .footer-social a {
   display: inline-flex;
   align-items: center;
   gap: .45rem;
   font-family: var(--font-display);
-  font-size: .95rem;
+  font-size: 1.02rem;
   font-weight: 500;
   text-decoration: none;
   color: var(--chalk);
@@ -1056,11 +1061,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .soc-fb { color: #1877F2; }
 .soc-mail { color: var(--brand-lit); }
 .footer-social a:hover { color: var(--brand-lit); }
-.footer-chapa { margin: 0; font-size: .85rem; color: #9BA3C2; line-height: 1.5; }
+.footer-chapa { margin: 0; font-size: .92rem; color: #9BA3C2; line-height: 1.5; }
 .footer-chapa a { color: var(--chalk); text-decoration: underline; text-underline-offset: 2px; }
 .footer-chapa a:hover { color: var(--brand-lit); }
 .footer-legal {
-  font-size: .8rem;
+  font-size: .88rem;
   color: #7B84A8;
   line-height: 1.6;
   margin: 0;
