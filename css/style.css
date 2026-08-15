@@ -436,7 +436,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   justify-self: center;
   min-height: 280px;
   width: 100%;
-  max-width: 420px;
+  max-width: 500px;
   display: flex;
   justify-content: center;
 }
@@ -450,7 +450,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .hero-img {
   position: relative;
   z-index: 1;
-  height: clamp(390px, 58vw, 650px);   /* foto maior (pedido do user) */
+  height: clamp(440px, 70vw, 760px);   /* foto maior (pedido do user, 2ª aumentada) */
   width: auto;
   object-fit: contain;
   object-position: bottom center;
@@ -499,7 +499,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     position: absolute;
     inset: auto 0 0 0;          /* centra sem transform (a entrada anima transform) */
     justify-content: center;
-    height: 84%;
+    height: 95%;
     max-width: none;
     min-height: 0;
     z-index: 1;

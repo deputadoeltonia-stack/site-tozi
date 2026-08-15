@@ -1,0 +1,31 @@
+<!doctype html><meta charset="utf-8"><title>probe</title>
+<style>html,body{margin:0}iframe{width:390px;height:844px;border:0}</style>
+<iframe id="f" src="/"></iframe><pre id="out">rodando…</pre>
+<script>
+const f=document.getElementById("f"),out=document.getElementById("out");
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+f.addEventListener("load",async()=>{
+ try{
+  const d=f.contentDocument,w=f.contentWindow,L=[];
+  const say=(k,v)=>{L.push(k+" = "+v);out.textContent="PROBE:\n"+L.join("\n")+"\nFIM";};
+  await Promise.race([w.document.fonts.ready,wait(2500)]); await wait(500);
+  const capa=d.querySelector(".capa"),hero=d.querySelector(".hero"),folha=d.querySelector(".folha"),tr=d.querySelector(".capa-trilho");
+  const hH=hero.getBoundingClientRect().height, trH=tr.getBoundingClientRect().height;
+  say("altura do hero", Math.round(hH)+"px");
+  say("altura do trilho", Math.round(trH)+"px  (precisa ser >= hero)");
+  say("margem de folga", Math.round(trH-hH)+"px  "+(trH>=hH?"OK":"ESTOUROU"));
+  let cobriu=null, soltou=null;
+  for(let y=0; y<=2600; y+=100){
+    w.scrollTo(0,y); await wait(90);
+    const rh=hero.getBoundingClientRect(), rf=folha.getBoundingClientRect();
+    if(cobriu===null && rf.top<=0) cobriu=y;
+    if(soltou===null && Math.abs(rh.top)>2 && y>100) soltou=y;
+  }
+  say("folha cobre em", cobriu+"px");
+  say("capa solta em", soltou+"px");
+  say("ordem correta (cobre antes de soltar)", (cobriu!==null && soltou!==null && cobriu<=soltou) ? "SIM" : "NAO");
+  const sw=d.documentElement.scrollWidth,cw=d.documentElement.clientWidth;
+  say("overflow-x",(sw<=cw?"OK":"ESTOURA")+" ("+sw+" vs "+cw+")");
+ }catch(e){out.textContent="PROBE:\nEXCECAO "+e+"\nFIM";}
+});
+</script>
