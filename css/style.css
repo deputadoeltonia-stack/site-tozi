@@ -639,17 +639,25 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 /* ficha com réguas (layout original) e zebra só na COR DO TEXTO:
    linha azul-marca, linha tinta. Versão de FUNDO zebrado ficou salva no
    commit "Identidade oficial TOZI ID" — restaurar de lá se ele preferir. */
-.ficha { list-style: none; margin: 0; padding: 0; max-width: 58ch; }
+/* ficha zebrada: linha de fundo azul, linha branca — cara de tabela.
+   Azul um pouco mais forte que a 1ª versão (era .09 de alpha). */
+.ficha {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 58ch;
+  border: 1px solid rgba(16,19,46,.08);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
 .ficha li {
-  padding: .8rem 0;
-  border-top: 1px solid rgba(16,19,46,.12);
+  padding: .75rem 1.1rem;
+  color: var(--ink-muted);
   line-height: 1.45;
 }
-.ficha li:last-child { border-bottom: 1px solid rgba(16,19,46,.12); }
-.ficha li:nth-child(odd) { color: var(--slate-2); }     /* azul escuro oficial (Pantone 280C) */
-.ficha li:nth-child(even) { color: var(--ink-muted); }
-.ficha li:nth-child(even) strong { color: var(--ink); font-weight: 600; }
-.ficha li:nth-child(odd) strong { color: inherit; font-weight: 600; }
+.ficha li:nth-child(odd) { background: rgba(16,85,189,.14); }
+.ficha li:nth-child(even) { background: #fff; }
+.ficha strong { color: var(--ink); font-weight: 600; }
 
 /* ---------- lead / fecho de seção ---------- */
 .n-lead {
