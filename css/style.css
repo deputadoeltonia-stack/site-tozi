@@ -1122,6 +1122,113 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .js .hero-copy > *, .js .hero-photo, .js .hero-plate { opacity: 1; transform: none; }
 }
 
+/* ---------- Ponte cinemática / ScrollExpand (porte vanilla do React Bits) ----------
+   O original é rAF + smoothing em JS mexendo em clip-path a cada frame. Aqui é
+   `animation-timeline: view()` nativo: o mesmo desenho com ZERO JS, e o próprio
+   browser cuida da suavidade. Mesmo padrão de timeline nomeada que a .stack usa.
+
+   Estado FINAL é o padrão (tela cheia, legenda visível): browser sem
+   scroll-driven vê a foto pronta em vez de uma janelinha travada — degrada
+   pro fim, nunca pro começo.
+
+   ⚠️ SEM gate de reduced-motion, deliberado: isso é ligado ao GESTO do usuário
+   (a rolagem dele), como a régua de leitura — não é movimento autônomo. E o
+   ambiente do user força reduce; gatear = ele não vê o efeito que pediu. */
+.expand { background: var(--slate); }
+.expand-track {
+  position: relative;
+  height: 190vh;                       /* trilho: quanto mais alto, mais lenta a abertura */
+  view-timeline-name: --expand-scrolls;
+}
+.expand-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;                      /* svh: barra do navegador móvel não faz a cena pular */
+  background: var(--slate);
+  /* clip (não hidden) prende o contra-zoom da foto: clip-path recorta a PINTURA,
+     mas o scale(1.24) continua contando como overflow de layout e alargava a
+     página em 12%. clip não vira scroll container, então não mexe no sticky. */
+  overflow: clip;
+}
+.expand-frame {
+  --se-x: 26%;                         /* recorte lateral inicial */
+  --se-y: 20%;                         /* recorte vertical inicial */
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  clip-path: none;                     /* fallback: já cheio */
+  will-change: clip-path;
+}
+.expand-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+/* o scrim segura o contraste do header claro e da legenda; claro no meio,
+   onde está o rosto dele */
+.expand-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+              rgba(16,19,46,.74) 0%, rgba(16,19,46,.12) 30%,
+              rgba(16,19,46,.26) 62%, rgba(16,19,46,.82) 100%);
+}
+.expand-cap {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: clamp(1.1rem, 4vh, 2.6rem);
+  padding: 0 6vw;
+  text-align: center;
+  color: var(--chalk);
+  font-size: clamp(.82rem, .74rem + .3vw, .98rem);
+  letter-spacing: .04em;
+  text-shadow: 0 2px 18px rgba(0,0,0,.55);
+}
+
+/* keyframes DENTRO do @supports: fora dele o browser rodaria com 0s e
+   congelaria a cena no estado inicial (mesma armadilha dos stacking cards) */
+@supports (animation-timeline: view()) {
+  .expand-frame, .expand-media, .expand-scrim, .expand-cap {
+    animation: linear both;
+    animation-timeline: --expand-scrolls;
+    /* contain = a janela em que o trilho cobre a viewport, ou seja, exatamente
+       o tempo em que o stage está grudado no topo */
+    animation-range: contain 0% contain 100%;
+  }
+  .expand-frame  { animation-name: expand-abre; }
+  .expand-media  { animation-name: expand-zoom; }
+  .expand-scrim  { animation-name: expand-scrim; }
+  .expand-cap    { animation-name: expand-cap; }
+
+  @keyframes expand-abre {
+    from { clip-path: inset(var(--se-y) var(--se-x) var(--se-y) var(--se-x) round 26px); }
+    to   { clip-path: inset(0% 0% 0% 0% round 0px); }
+  }
+  /* contra-zoom: a imagem "assenta" enquanto a moldura abre */
+  @keyframes expand-zoom { from { transform: scale(1.24); } to { transform: scale(1); } }
+  @keyframes expand-scrim { from { opacity: 0; } to { opacity: 1; } }
+  /* legenda só no fim, quando a foto já é a cena inteira */
+  @keyframes expand-cap {
+    0%, 66% { opacity: 0; transform: translateY(14px); }
+    100%    { opacity: 1; transform: none; }
+  }
+}
+
+/* no celular a abertura é mais curta e começa maior: 190vh de rolagem antes do
+   conteúdo é caro numa tela pequena */
+@media (max-width: 760px) {
+  .expand-track { height: 150vh; }
+  .expand-frame { --se-x: 12%; --se-y: 15%; }
+}
+
 /* ---------- SpotlightCard (porte vanilla do React Bits) ----------
    Luz radial segue o cursor sobre o card de proposta.
    Só em ponteiro fino: no toque não existe hover e o efeito seria peso morto.
