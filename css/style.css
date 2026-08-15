@@ -412,15 +412,18 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   margin: 0 0 1.8rem;
 }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 2.2rem; }
-/* CTA do hero: branco com tinta navy — azul-marca sumia sobre as ondas
-   azuis; branco é o único plano que destaca nos dois fundos */
+/* CTAs do hero: os dois transparentes e brancos. O azul-marca sumia sobre
+   as ondas azuis e o branco chapado pesava demais na capa; o contorno
+   branco destaca nos dois fundos sem fechar a arte.
+   A borda cheia no CTA principal e a de 55% no secundário são o que
+   sobrou da hierarquia entre os dois. */
 .hero .btn-cta {
-  background: #fff;
-  color: #202051;
+  background: transparent;
+  color: #fff;
+  border-color: #fff;
   font-weight: 700;
-  box-shadow: 0 12px 30px rgba(0,0,0,.35);
 }
-.hero .btn-cta:hover { background: var(--chalk); }
+.hero .btn-cta:hover { background: #fff; color: #202051; }
 .hero .btn-ghost { border-color: rgba(233,234,242,.55); }
 @media (min-width: 860px) {
   /* desce o bloco de ação: simetria vertical com a placa da direita */
@@ -1122,8 +1125,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 /* hero: logo antes do número SÓ no celular (pedido); desktop = logo no fim */
 @media (min-width: 860px) {
-  .hero-direct .wa-inline .wa-icon { order: 2; }
-}
+  }
 .wa-inline {
   display: inline-flex;
   align-items: center;
@@ -1138,7 +1140,6 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 .wa-inline:hover { color: #fff; border-bottom-color: #fff; }
 /* "Ou fale direto com a equipe": legível, não nota de rodapé */
-.hero-direct,
 .form-direto {
   margin: 1.1rem 0 0;
   font-size: 1.08rem;
