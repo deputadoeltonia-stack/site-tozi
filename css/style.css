@@ -412,19 +412,19 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   margin: 0 0 1.8rem;
 }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 2.2rem; }
-/* CTAs do hero: os dois transparentes e brancos. O azul-marca sumia sobre
-   as ondas azuis e o branco chapado pesava demais na capa; o contorno
-   branco destaca nos dois fundos sem fechar a arte.
-   A borda cheia no CTA principal e a de 55% no secundário são o que
-   sobrou da hierarquia entre os dois. */
-.hero .btn-cta {
-  background: transparent;
-  color: #fff;
+/* CTAs do hero: os DOIS brancos com tinta navy — azul-marca sumia sobre as
+   ondas azuis, e branco é o único plano que destaca nos dois fundos.
+   "Ver propostas" larga o estilo fantasma e acompanha o principal. */
+.hero .btn-cta,
+.hero .btn-ghost {
+  background: #fff;
+  color: #202051;
   border-color: #fff;
   font-weight: 700;
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
 }
-.hero .btn-cta:hover { background: #fff; color: #202051; }
-.hero .btn-ghost { border-color: rgba(233,234,242,.55); }
+.hero .btn-cta:hover,
+.hero .btn-ghost:hover { background: var(--chalk); border-color: var(--chalk); }
 @media (min-width: 860px) {
   /* desce o bloco de ação: simetria vertical com a placa da direita */
   .hero-actions { margin-top: 3rem; }
