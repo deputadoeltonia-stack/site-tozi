@@ -1019,7 +1019,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   }
 }
 .footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; }
-/* rosto ilustrado (pág 5 do ID) ao lado da marca */
+/* rosto ilustrado (pág 20 do ID: contorno escuro + miolo branco) ao lado da marca */
 .footer-col-oficial { flex-direction: row; align-items: flex-end; gap: 1.4rem; }
 .footer-rosto { width: clamp(84px, 8vw, 118px); height: auto; flex: none; }
 .footer-oficial-textos { display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; }
