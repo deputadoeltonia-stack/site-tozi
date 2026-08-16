@@ -35,10 +35,15 @@ export const CANDIDATOS = {
   'tozisite.vercel.app': { alias: 'colinhavirtual.dreltonai.com.br' },
   'proftozi.com.br': { alias: 'colinhavirtual.dreltonai.com.br' },
   'www.proftozi.com.br': { alias: 'colinhavirtual.dreltonai.com.br' },
+  // Site da Dulce Rita (site-dulcerita, deploy Vercel) tambem embute /colinha/.
+  'site-dulcerita.vercel.app': { alias: 'colinha2026.dreltonai.com.br' },
   // Numero confirmado pelo santinho impresso 7x10 da campanha (15/08/2026).
   'colinha2026.dreltonai.com.br': {
     nome: 'DULCE RITA', cargo: 7, numero: '44400', partido: 'UNIÃO', tema: 'dulce',
     foto: 'dulce', rotulo: 'Deputada estadual', // flexao do cargo, so no campo dela
+    // O verso do santinho dela ja vem com o federal (Dr. Elton, peca conjunta)
+    // e o governador preenchidos. Sugestao = editavel, como no tema do Elton.
+    sugestao: { federal: '4412', governador: '10' },
   },
 }
 
