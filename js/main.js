@@ -7,7 +7,12 @@
      Vazio = modo DEMO: salva no localStorage e mostra sucesso.
      Cole a URL do Google Apps Script / Supabase p/ gravar de verdade.
      ========================================================= */
-  const LEAD_ENDPOINT = "";
+  const LEAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbyBdY45weHbgTSWLBt0ymfRSHPmz4vHVGdEiu13T3o3yGejT36JiGPauMrxmv-vRz-j/exec";
+
+  /* Mesma planilha do site do Dr. Elton; o campo `origem` é o que manda o lead
+     para a aba "Pagina Tozi" em vez da aba padrão. Mudar aqui sem mudar o
+     ABA_POR_ORIGEM do Apps Script faz o lead cair na aba errada, não sumir. */
+  const LEAD_ORIGEM = "site-tozi";
 
   /* WhatsApp oficial da campanha — fonte única do número no JS.
      O mesmo número aparece no HTML (hero, form, rodapé, barra mobile). */
@@ -230,11 +235,24 @@
 
     fetch(LEAD_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      // text/plain de proposito: application/json dispara preflight OPTIONS,
+      // e o Apps Script nao responde OPTIONS — o envio morria antes de chegar.
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(lead),
     })
       .then((res) => {
         if (!res.ok) throw new Error("http " + res.status);
+        return res.text().then((t) => {
+          try {
+            const j = JSON.parse(t);
+            if (j && j.ok === false) throw new Error(j.msg || "recusado");
+          } catch (e) {
+            if (e instanceof SyntaxError) return;   // corpo opaco: 200 ja basta
+            throw e;
+          }
+        });
+      })
+      .then(() => {
         form.reset();
         mostraStatus(status, "ok", "Recebido! Obrigado, " + primeiro + ". A equipe vai falar com você.",
           acaoSucesso(lead.nome));
@@ -267,7 +285,9 @@
       if (!lgpd.checked) { setErr(null, lgpdErr, "Marque a autorização para continuar."); bad = true; } else setErr(null, lgpdErr, "");
       if (bad) { status.hidden = true; return; }
 
-      enviarLead({ nome: nome.value.trim(), telefone: soDigitos(tel.value), em: new Date().toISOString() }, form, status);
+      enviarLead({ nome: nome.value.trim(), telefone: soDigitos(tel.value),
+                   consentimento_lgpd: true, origem: LEAD_ORIGEM,
+                   em: new Date().toISOString() }, form, status);
     });
   }
 
