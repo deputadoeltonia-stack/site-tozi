@@ -484,11 +484,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 @media (min-width: 860px) {
   /* palco absoluto com as coordenadas da pág 6 (grid não reproduz a
      sobreposição foto/ondas/manchete do guia) */
-  .hero { padding: 0; }
+  .hero { padding: 0; --palco: clamp(620px, 92vh, 900px); }
   .hero-grid {
     display: block;
     max-width: none;
-    height: clamp(620px, 92vh, 900px);
+    height: var(--palco);
     padding: 0;
   }
   .hero-copy {
@@ -500,6 +500,16 @@ a:focus-visible, button:focus-visible, input:focus-visible {
        Estava no .hero-title, que é estático — onde a propriedade é ignorada,
        e por isso o bloco inteiro pintava atrás da foto. */
     z-index: 2;
+  }
+  /* BOX DO LEAD: termina onde o boneco começa, em qualquer tela.
+     A foto é centrada e a largura dela é derivada da altura do palco
+     (razão 1157/1500 do arquivo → metade = palco × 0.95 × 0.38567).
+     Borda esquerda do Tozi = 50vw − essa metade; o lead vai de 6.3vw até
+     lá, com 28px de respiro. O piso de 240px evita coluna-espaguete em
+     janela muito baixa — nesse extremo o texto encosta milímetros na borda
+     TRANSPARENTE do arquivo, não no corpo. */
+  .hero-lead {
+    max-width: max(240px, calc(43.7vw - var(--palco) * 0.95 * 0.38567 - 28px));
   }
   .hero-photo {
     position: absolute;
