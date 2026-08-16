@@ -1,0 +1,12 @@
+.git
+.gitignore
+node_modules
+scripts
+assets-src
+fonts-src
+.impeccable
+.claude-flow
+.env
+.env.local
+.env*
+.DS_Store
