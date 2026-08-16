@@ -400,8 +400,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   height: auto;
 }
 .hero-title {
-  /* pág 6: 51px em 1920 = 2.65vw, 2 linhas, entrelinha 1.06, sem ponto */
-  font-size: clamp(1.55rem, 2.65vw, 2.6rem);
+  /* pág 6: 2 linhas. A manchete é mais longa que o slogan do guia, então o
+     corpo cede pra cada frase caber na SUA linha (a maior pede ~618px). */
+  font-size: clamp(1.4rem, 2.15vw, 2rem);
   font-weight: 700;
   letter-spacing: .01em;
   line-height: 1.12;
@@ -495,11 +496,16 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     position: absolute;
     left: 6.3%;
     top: 27%;
-    width: min(40vw, 580px);
+    width: min(43vw, 630px);   /* manchete longa: a coluna cede 50px */
     /* z-index PRECISA estar aqui: .hero-copy é o elemento posicionado.
        Estava no .hero-title, que é estático — onde a propriedade é ignorada,
        e por isso o bloco inteiro pintava atrás da foto. */
     z-index: 2;
+  }
+  .hero-title {
+    /* piso menor que o do mobile: entre 860 e 1200 a coluna é estreita e o
+       piso de 1.4rem forçava a frase a quebrar em 4 linhas */
+    font-size: clamp(1.15rem, 2.15vw, 2rem);
   }
   /* BOX DO LEAD: termina onde o boneco começa, em qualquer tela.
      A foto é centrada e a largura dela é derivada da altura do palco
@@ -532,6 +538,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 @media (max-width: 859px) {
   .hero-plate { order: 2; margin: .4rem 0 1.4rem; }
   .hero-photo { order: 3; }
+  /* a quebra manual da manchete é de DESKTOP: em tela estreita ela prendia
+     cada frase numa linha e o texto estourava; sem ela quebram sozinhas */
+  .hero-title .q-desk { display: none; }
 }
 /* mobile: manchete -> placa -> foto (foto continua cortada na dobra da seção) */
 @media (max-width: 859px) {
