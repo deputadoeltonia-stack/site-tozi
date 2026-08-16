@@ -484,69 +484,48 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .hero-photo.no-photo .hero-photo-fallback small { font-family: var(--font-display); font-size: .72rem; }
 
 @media (min-width: 860px) {
-  /* DUAS COLUNAS, não mais palco absoluto.
-     O palco absoluto da pág 6 punha a foto CENTRADA e a manchete por cima
-     dela. Com a manchete nova (mais larga) e a foto maior as duas caixas
-     passaram a se cruzar, e como .hero-copy era absoluta SEM z-index (o
-     z-index estava no .hero-title, que é estático — onde a propriedade não
-     tem efeito), texto e botões ficavam ATRÁS da foto.
-     No grid isso não pode acontecer: cada um tem sua coluna. Esquerda leva
-     identidade + mensagem + ações; direita leva a foto. */
+  /* palco absoluto com as coordenadas da pág 6 (grid não reproduz a
+     sobreposição foto/ondas/manchete do guia) */
   .hero { padding: 0; }
   .hero-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    column-gap: clamp(1.5rem, 3vw, 3.5rem);
-    max-width: 1560px;
+    display: block;
+    max-width: none;
     height: clamp(620px, 92vh, 900px);
-    padding: clamp(1rem, 3vh, 2.5rem) clamp(1.5rem, 5vw, 4.5rem) 0;
-  }
-  .hero-plate {
-    position: static;
-    grid-column: 1;
-    grid-row: 1;
-    align-self: end;
-    z-index: 2;
+    padding: 0;
   }
   .hero-copy {
-    position: static;
-    grid-column: 1;
-    grid-row: 2;
-    align-self: center;
-    width: auto;
-    max-width: 660px;
-    z-index: 2;                /* na coluna dele já basta, mas garante a pintura */
+    position: absolute;
+    left: 6.3%;
+    top: 27%;
+    width: min(43vw, 630px);   /* manchete nova é mais longa: a coluna cede 50px */
   }
   .hero-title {
     /* piso menor que o do mobile: entre 860 e 1200 a coluna é estreita e o
        piso de 1.4rem forçava a frase a quebrar em 4 linhas */
     font-size: clamp(1.15rem, 2.15vw, 2rem);
+    z-index: 2;
   }
   .hero-photo {
-    position: relative;
-    inset: auto;
-    grid-column: 2;
-    grid-row: 1 / -1;
-    align-items: flex-end;     /* colada na dobra, como no guia */
+    position: absolute;
+    inset: auto 0 0 0;          /* centra sem transform (a entrada anima transform) */
     justify-content: center;
-    height: auto;
+    height: 95%;
     max-width: none;
     min-height: 0;
     z-index: 1;
   }
-  /* max-width segura a foto DENTRO da coluna: se a altura cheia a fizesse
-     invadir o texto, ela encolhe sozinha em vez de vazar */
-  .hero-img { height: 100%; width: auto; max-width: 100%; }
+  .hero-img { height: 100%; }
+  .hero-plate {
+    position: absolute;
+    right: 5.7%;
+    top: 42%;
+    z-index: 2;
+  }
 }
 /* mobile: manchete -> placa -> foto (foto continua cortada na dobra da seção) */
 @media (max-width: 859px) {
   .hero-plate { order: 2; margin: .4rem 0 1.4rem; }
   .hero-photo { order: 3; }
-  /* a quebra manual é de DESKTOP: em tela estreita ela prendia cada frase
-     numa linha só e o texto era cortado na borda. Sem ela as frases
-     quebram sozinhas. */
-  .hero-title .q-desk { display: none; }
 }
 /* mobile: manchete -> placa -> foto (foto continua cortada na dobra da seção) */
 @media (max-width: 859px) {
@@ -562,26 +541,22 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 /* botão circular de scroll (guia pág 6), canto inferior direito do hero */
 .hero-scroll {
-  /* Saiu do 79%/87% da pág 6: ali ele caía EM CIMA do Tozi depois que o
-     hero virou duas colunas. Foi para a base da coluna de texto, onde a
-     foto nunca chega. Branco, não o #0C62AE do guia — naquele canto ficam
-     as ondas, que são exatamente #0C62AE, e o círculo sumia nelas. */
+  /* pág 6: círculo #0C62AE de ~5.6vw centrado em 79% x / 87% y */
   position: absolute;
-  left: clamp(1.5rem, 5vw, 4.5rem);
-  bottom: clamp(1.5rem, 4vh, 3rem);
-  right: auto;
-  z-index: 3;
+  right: 18%;
+  bottom: 8%;
+  z-index: 2;
   display: none;
   place-items: center;
   width: clamp(56px, 5.6vw, 92px);
   height: clamp(56px, 5.6vw, 92px);
   border-radius: 50%;
-  background: #fff;
-  color: #10132E;
-  box-shadow: 0 10px 26px rgba(0,0,0,.45);
+  background: #0C62AE;
+  color: #fff;
+  box-shadow: 0 10px 26px rgba(0,0,0,.35);
   transition: background-color .18s var(--ease), transform .18s var(--ease);
 }
-.hero-scroll:hover { background: var(--chalk); transform: translateY(3px); }
+.hero-scroll:hover { background: #0D4497; transform: translateY(3px); }
 @media (min-width: 860px) { .hero-scroll { display: grid; } }
 /* convite sutil: a seta acena. transform no SVG interno pra não brigar
    com o translateY do hover no <a> */
