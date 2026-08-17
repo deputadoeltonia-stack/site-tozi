@@ -964,6 +964,45 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 @media (prefers-reduced-motion: reduce) { .material-card { transition: none; } }
 
+/* --- botao neon da Colinha ---
+   O CTA azul-marca sobre o card navy quase nao separava (mesmo matiz, mesma
+   familia de luminancia). Aqui ele vira placa acesa: mesmo matiz do Pantone
+   2132C, empurrado para a luminancia de tubo (--neon), texto navy por cima
+   (7.4:1) e o brilho em duas camadas, uma curta e uma difusa. A pulsacao e
+   lenta de proposito: neon respira, nao pisca. */
+.btn-neon {
+  --neon: #4FB6FF;
+  background: var(--neon);
+  color: var(--slate);
+  border-color: rgba(255,255,255,.55);
+  padding: 1rem 1.85rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+  box-shadow:
+    0 0 0 1px rgba(79,182,255,.55),
+    0 0 16px rgba(79,182,255,.55),
+    0 0 42px rgba(79,182,255,.28);
+  animation: neon-respira 4.5s var(--ease) infinite;
+}
+.btn-neon:hover,
+.material-card:hover .btn-neon {
+  background: #6FC6FF;
+  transform: translateY(-1px);
+  animation: none;
+  box-shadow:
+    0 0 0 1px rgba(111,198,255,.75),
+    0 0 22px rgba(111,198,255,.75),
+    0 0 62px rgba(111,198,255,.42);
+}
+@keyframes neon-respira {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(79,182,255,.55), 0 0 16px rgba(79,182,255,.55), 0 0 42px rgba(79,182,255,.28); }
+  50%      { box-shadow: 0 0 0 1px rgba(79,182,255,.70), 0 0 24px rgba(79,182,255,.70), 0 0 60px rgba(79,182,255,.40); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-neon { animation: none; }
+  .btn-neon:hover, .material-card:hover .btn-neon { transform: none; }
+}
+
 .form-grid { display: grid; gap: 2rem; }
 @media (min-width: 860px) {
   .form-grid { grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
