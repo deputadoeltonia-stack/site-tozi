@@ -974,12 +974,12 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   --neon: #4FB6FF;           /* cor do brilho: e o halo que separa do card, nao o fill */
   background: linear-gradient(180deg, #2470CE 0%, var(--brand) 100%);
   color: #fff;               /* 4.9:1 no topo do gradiente, 6.87:1 na base (--brand) */
-  border-color: transparent;
+  border: 0;                 /* o .btn traz 1.5px solid transparent: com o gradiente
+                                clipado no border-box virava hairline nas bordas */
   padding: 1rem 1.85rem;
   font-weight: 700;
   letter-spacing: .01em;
   box-shadow:
-    0 0 0 1px rgba(79,182,255,.45),
     0 0 16px rgba(79,182,255,.50),
     0 0 42px rgba(79,182,255,.26);
   animation: neon-respira 4.5s var(--ease) infinite;
@@ -990,13 +990,12 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   transform: translateY(-1px);
   animation: none;
   box-shadow:
-    0 0 0 1px rgba(111,198,255,.70),
     0 0 22px rgba(111,198,255,.70),
     0 0 62px rgba(111,198,255,.40);
 }
 @keyframes neon-respira {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(79,182,255,.45), 0 0 16px rgba(79,182,255,.50), 0 0 42px rgba(79,182,255,.26); }
-  50%      { box-shadow: 0 0 0 1px rgba(79,182,255,.62), 0 0 24px rgba(79,182,255,.66), 0 0 60px rgba(79,182,255,.38); }
+  0%, 100% { box-shadow: 0 0 16px rgba(79,182,255,.50), 0 0 42px rgba(79,182,255,.26); }
+  50%      { box-shadow: 0 0 24px rgba(79,182,255,.66), 0 0 60px rgba(79,182,255,.38); }
 }
 @media (prefers-reduced-motion: reduce) {
   .btn-neon { animation: none; }
