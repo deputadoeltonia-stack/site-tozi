@@ -291,12 +291,33 @@
     });
   }
 
+  /* ============ colinha no preview local ============
+     A colinha resolve a campanha pelo HOSTNAME (colinha/colinha-core.js):
+     proftozi.com.br e tozisite.vercel.app tem alias para a config do Tozi,
+     mas localhost nao tem e cai no PADRAO, que e a colinha do Dr. Elton.
+     Aqui o link ganha ?campanha=tozi apenas em host local. Em producao a
+     funcao sai na primeira linha, e mesmo se o parametro vazasse para a URL
+     o proprio core o ignora fora do localhost — de proposito, para ninguem
+     abrir um site com outro candidato travado no topo.
+     O Set espelha LOCAIS do core: fora dele o parametro seria ignorado, e
+     acrescentar host aqui (ex.: o IP da LAN) viraria no-op silencioso. */
+  const HOSTS_LOCAIS = new Set(["localhost", "127.0.0.1", "[::1]", ""]);
+  function initColinhaLocal() {
+    if (!HOSTS_LOCAIS.has(location.hostname)) return;
+    document.querySelectorAll('a[href^="colinha/"]').forEach(function (a) {
+      const u = new URL(a.getAttribute("href"), location.href);
+      u.searchParams.set("campanha", "tozi");
+      a.setAttribute("href", u.pathname + u.search);
+    });
+  }
+
   /* ============ boot ============ */
   function boot() {
     document.body.classList.add("is-loaded");
     initHeaderTheme();
     initReveal();
     initSpotlight();
+    initColinhaLocal();
     initForm();
     if (location.search.indexOf("selftest") !== -1) selftest();
   }
