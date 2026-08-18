@@ -553,6 +553,15 @@ body:is([data-tema="tozi"], [data-tema="dulce"]) .visto-marca { display: none; }
    direita é onde o rosto entra. */
 body[data-tema="tozi"] .passos {
   flex: 1; min-width: 0; padding-right: 4.2rem; font-size: .8rem;
+  /* Bolinhas equidistantes. O passo 1 nao cabe numa linha (pede 207px de
+     texto numa coluna de 188px) e quebra em duas; os passos 2 e 3 ficam com
+     uma. Como a bolinha e ancorada no topo do li, os vaos saiam 38px e 22px.
+     grid-auto-rows: 1fr iguala as tres faixas da grade pela mais alta, entao
+     a distancia entre bolinhas vira a mesma. Escolhido em vez de encolher a
+     fonte ou roubar do vao do rosto (que so tem 9,6px sobrando) porque nao
+     depende da largura: num celular mais estreito outro passo quebra e o
+     espacamento continua igual. */
+  grid-auto-rows: 1fr;
 }
 body[data-tema="tozi"] .passos li::before {
   background: var(--acento); color: #fff;
