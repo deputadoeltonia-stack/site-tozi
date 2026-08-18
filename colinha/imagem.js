@@ -798,6 +798,21 @@ export async function desenhar(colinha, config) {
   ctx.font = fonte(t, 500, COND, 24, { texto: true })
   ctx.fillText('Confira sempre o n\u00famero do candidato na urna.', L / 2, A - 18)
 
+  // Marcacao legal na margem esquerda, rodada 90deg — o lugar que o santinho
+  // impresso usa para razao social e CNPJ. A faixa 0..MARGEM fica livre: as
+  // fotos so comecam em MARGEM, entao o texto nao disputa espaco com nada.
+  if (config.cnpj) {
+    ctx.save()
+    ctx.translate(MARGEM * 0.62, A - 118)
+    ctx.rotate(-Math.PI / 2)
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'alphabetic'
+    ctx.fillStyle = t.rot
+    ctx.font = fonte(t, 500, COND, 17, { texto: true })
+    ctx.fillText(`${config.razao} \u00b7 CNPJ ${config.cnpj}`, 0, 0)
+    ctx.restore()
+  }
+
   if (FAIXA) {
     // A faixa lima fecha a peca com o MESMO pattern oficial do topo, na
     // versao verde do manual (p.22) e na mesma escala.

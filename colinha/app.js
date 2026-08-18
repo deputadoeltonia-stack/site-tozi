@@ -30,6 +30,14 @@ const el = {
 
 document.body.dataset.tema = config.tema
 
+// Marcacao legal da propaganda: razao social e CNPJ da campanha. Le da config
+// e so da config, como o selo e o campo travado — nunca do dataset do TSE.
+if (config.cnpj) {
+  const legal = document.getElementById('legal')
+  legal.textContent = `${config.razao} · CNPJ ${config.cnpj}`
+  legal.hidden = false
+}
+
 // Embutida num site, a pagina ganha o link de volta para a raiz dele.
 {
   const volta = linkDeVolta(location.pathname)

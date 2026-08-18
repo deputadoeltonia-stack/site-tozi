@@ -448,6 +448,14 @@ body[data-tema="elton"] .digito { font-size: 21.6cqw; }
 .acoes button:active { transform: scale(.985); }
 .acoes button[disabled] { opacity: .45; cursor: default; }
 
+/* Marcacao legal obrigatoria: menor e mais apagada que o rodape, como na
+   lateral do santinho impresso, sem competir com o aviso da urna. */
+.legal {
+  margin: .5rem 0 0; text-align: center;
+  font-size: .6rem; line-height: 1.35; letter-spacing: .01em;
+  color: var(--mut); opacity: .72; text-wrap: balance;
+}
+
 .rodape {
   margin: 1.25rem 0 0; text-align: center;
   font-size: .7rem; color: var(--mut);
