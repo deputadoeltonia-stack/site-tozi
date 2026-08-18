@@ -1,0 +1,10 @@
+# Site oficial — Prof Tozi, Deputado Estadual (44447)
+User-agent: *
+Allow: /
+
+# A Colinha Digital ja se marca noindex no proprio HTML: ela e ferramenta de
+# uso pessoal do eleitor, nao pagina de conteudo. Ficar fora da busca evita
+# que um link com numeros de outra pessoa apareca como resultado.
+Disallow: /colinha/
+
+Sitemap: https://proftozi44447.com.br/sitemap.xml

@@ -3,6 +3,13 @@
 #   bash scripts/deploy-vps.sh          # envia
 #   bash scripts/deploy-vps.sh --dry    # mostra o que mudaria, sem enviar
 #
+# ATENÇÃO (conferido em 18/08/2026): proftozi44447.com.br NÃO aponta mais para
+# este VPS. O A do domínio resolve 192.185.131.84 (HostGator) e é de lá que o
+# site é servido; o VPS só devolve um 308 para https e sai de cena. Rodar este
+# script hoje sobe arquivos que ninguém serve — e a conferência do fim imprime
+# um HTTP 308 que passa por sinal de vida. Publicar de verdade = enviar para a
+# HostGator. Guardado porque colinhavirtual.dreltonai.com.br continua no VPS.
+#
 # O que NÃO sobe está em .vercelignore — mesmo arquivo que a Vercel usa, pra
 # não existirem duas listas de "o que é site e o que é bastidor" divergindo.
 set -euo pipefail

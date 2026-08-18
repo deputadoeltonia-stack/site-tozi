@@ -129,6 +129,25 @@ img { max-width: 100%; display: block; }
 .btn-ghost:hover { border-color: var(--chalk); }
 .btn-block { width: 100%; }
 
+/* Pular para o conteúdo: fora da tela até o Tab chegar nele. `top` em vez de
+   display:none/visibility porque elemento escondido assim não recebe foco —
+   e um skip link que não pode ser focado não é skip link nenhum. */
+.pular {
+  position: fixed;
+  top: -100px;
+  left: var(--gutter);
+  z-index: 100;
+  padding: .7rem 1.1rem;
+  background: var(--brand);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  transition: top .18s var(--ease);
+}
+.pular:focus { top: 0; }  /* :focus, nao :focus-visible: o link so e alcancavel por teclado, e o foco programatico (leitor de tela) nao casa com focus-visible */
+
 /* foco visível (acessibilidade). Duas cores porque azul-marca não rende
    3:1 (não-texto) contra o próprio navy do hero/rodapé/form — o âmbar
    original servia os dois lados de graça por ser complementar; o azul

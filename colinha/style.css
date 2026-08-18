@@ -644,6 +644,17 @@ body[data-tema="tozi"] .acoes { margin-top: 3.9rem; }
 body:is([data-tema="elton"], [data-tema="tozi"], [data-tema="dulce"]) .campo:has(> .selo) .erro {
   padding-right: 7.4rem;
 }
+/* O NOME tambem. O selo desce para a faixa das caixas por um `top` fixo, mas
+   o rotulo acima dele cresce com o nome do candidato — e o topo do circulo
+   subia por cima da ultima palavra. Medido nas tres campanhas com o
+   presidente de nome mais longo do dataset ("VETERINARIO WILSON GRASSI"):
+   Tozi cobria 88px do nome, Dr. Elton 116px, Dulce 76px, sempre a sigla e o
+   fim do nome. Reservar a faixa faz o nome quebrar em duas linhas em vez de
+   sumir por baixo do adesivo — numa peca de conferencia de voto, ler o nome
+   inteiro vale mais que a linha unica. */
+body:is([data-tema="elton"], [data-tema="tozi"], [data-tema="dulce"]) .campo:has(> .selo) .rotulo {
+  padding-right: 7.4rem;
+}
 /* A peça não tem o tique de conferido: o campo dele já vem preenchido. */
 body:is([data-tema="elton"], [data-tema="tozi"], [data-tema="dulce"]) .rotulo { font-size: .82rem; }
 /* Na peca o campo travado sai sem a sigla do partido ("DEPUTADO FEDERAL |

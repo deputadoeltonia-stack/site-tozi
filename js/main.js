@@ -66,12 +66,19 @@
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 
+  // Um clique cancela a rolagem do clique anterior. Sem o token, dois toques
+  // seguidos (o menu fecha e o link rola — acontece no mobile) deixavam DOIS
+  // laços de rAF vivos, cada um chamando scrollTo com um alvo diferente no
+  // mesmo frame: a página tremia e parava no meio do caminho.
+  let rolagem = 0;
   function scrollToY(targetY, dur) {
     if (prefersReduced) { window.scrollTo(0, targetY); return; }
+    const meu = ++rolagem;
     const startY = window.pageYOffset;
     const dist = targetY - startY;
     const t0 = performance.now();
     (function step(now) {
+      if (meu !== rolagem) return;
       const p = Math.min(1, (now - t0) / dur);
       window.scrollTo(0, startY + dist * easeOut(p));
       if (p < 1) requestAnimationFrame(step);
@@ -95,7 +102,10 @@
       ? 0
       : Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - headerOffset() - 12);
     scrollToY(top, 520);
-    history.replaceState(null, "", id === "#topo" ? location.pathname : id);
+    // location.search junto: sem ele, um clique na marca ("#topo") reescrevia
+    // a URL só com o pathname e derrubava os ?utm_ do link que trouxe a
+    // pessoa — a campanha perdia a origem do tráfego no meio da visita.
+    history.replaceState(null, "", id === "#topo" ? location.pathname + location.search : id);
   });
 
   /* ============ SpotlightCard (porte vanilla do React Bits) ============
@@ -123,14 +133,22 @@
       ".section-head, .section-body, .quotes, .gallery, .form-grid"
     );
     targets.forEach((t) => t.classList.add("reveal"));
+    let respondeu = false;
     const io = new IntersectionObserver((entries) => {
+      respondeu = true;
       entries.forEach((en) => {
         if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
       });
     }, { threshold: 0.12 });
     targets.forEach((t) => io.observe(t));
-    // failsafe: se o IO não disparar (aba oculta/headless), revela tudo — nunca shippar em branco
-    setTimeout(() => targets.forEach((t) => t.classList.add("in")), 2500);
+    // Failsafe para o IO que nunca dispara (aba oculta, headless): nunca
+    // shippar em branco. SÓ nesse caso — revelar tudo incondicionalmente
+    // matava o efeito na página inteira, porque o IO responde já no primeiro
+    // frame e os 2,5s venciam com o visitante ainda lendo a capa: dali em
+    // diante toda seção abaixo da dobra já nascia revelada.
+    setTimeout(() => {
+      if (!respondeu) targets.forEach((t) => t.classList.add("in"));
+    }, 2500);
   }
 
   /* ============ header camaleão ============
