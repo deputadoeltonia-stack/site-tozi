@@ -311,6 +311,111 @@
     });
   }
 
+  /* ============ menu de seções (mobile) ============
+     Abaixo de 860px a .nav do header some e o site fica sem navegação. Este
+     painel cobre o vão. Os links são CLONADOS da .nav: uma seção nova entra
+     no HTML uma vez só e aparece nos dois lugares. */
+  function initMenu() {
+    const btn = document.getElementById("nav-toggle");
+    const painel = document.getElementById("nav-panel");
+    const lista = document.getElementById("nav-panel-lista");
+    if (!btn || !painel || !lista) return;
+
+    const secoes = Array.prototype.slice.call(
+      document.querySelectorAll(".nav a[href^='#']"),
+    );
+    if (!secoes.length) return;
+    secoes.forEach((origem, i) => {
+      const a = document.createElement("a");
+      a.href = origem.getAttribute("href");
+      a.textContent = origem.textContent.trim();
+      a.setAttribute("data-scroll", "");
+      a.style.setProperty("--i", i);   // escalonamento da entrada
+      lista.appendChild(a);
+    });
+
+    const header = document.getElementById("header");
+    let eraDark = false;
+    let aberto = false;
+
+    // Marca a seção em que o eleitor está. Calculado na ABERTURA, não em
+    // scroll: o painel só existe aberto, então observar o tempo todo seria
+    // trabalho jogado fora.
+    function marcarAtual() {
+      const linha = window.pageYOffset + (header ? header.offsetHeight : 0) + 24;
+      let atual = null;
+      lista.querySelectorAll("a").forEach((a) => {
+        a.removeAttribute("aria-current");
+        const alvo = document.querySelector(a.getAttribute("href"));
+        if (alvo && alvo.getBoundingClientRect().top + window.pageYOffset <= linha) atual = a;
+      });
+      if (atual) atual.setAttribute("aria-current", "true");
+    }
+
+    // Foco preso no painel enquanto aberto: Tab não pode vazar para a página
+    // atrás da cortina. O botão entra na lista porque ele é o "fechar".
+    function focaveis() {
+      return [btn].concat(
+        Array.prototype.slice.call(painel.querySelectorAll("a[href], button")),
+      );
+    }
+
+    function abrir() {
+      aberto = true;
+      marcarAtual();
+      painel.removeAttribute("inert");
+      document.body.classList.add("menu-aberto");
+      btn.setAttribute("aria-expanded", "true");
+      btn.setAttribute("aria-label", "Fechar menu");
+      // O camaleão do header trabalha por CONTRASTE: seção escura embaixo =
+      // pele clara. Com o painel navy cobrindo tudo, a pele correta é a
+      // clara — forçar, não remover, senão a marca fica navy sobre navy.
+      if (header) {
+        eraDark = header.classList.contains("on-dark");
+        header.classList.add("on-dark");
+      }
+      document.body.style.overflow = "hidden";
+    }
+
+    function fechar(devolveFoco) {
+      if (!aberto) return;
+      aberto = false;
+      painel.setAttribute("inert", "");
+      document.body.classList.remove("menu-aberto");
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-label", "Abrir menu");
+      if (header && !eraDark) header.classList.remove("on-dark");
+      document.body.style.overflow = "";
+      if (devolveFoco) btn.focus();
+    }
+
+    btn.addEventListener("click", () => (aberto ? fechar(false) : abrir()));
+
+    // Clique num link: fecha ANTES de o handler delegado de [data-scroll]
+    // rodar no document, para o scroll acontecer com a página destravada.
+    painel.addEventListener("click", (e) => {
+      if (e.target.closest("a[href^='#']")) fechar(false);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (!aberto) return;
+      if (e.key === "Escape") { fechar(true); return; }
+      if (e.key !== "Tab") return;
+      const itens = focaveis();
+      const primeiro = itens[0];
+      const ultimo = itens[itens.length - 1];
+      if (e.shiftKey && document.activeElement === primeiro) { e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primeiro.focus(); }
+    });
+
+    // Girou para paisagem / abriu no tablet: acima de 860px a .nav volta e o
+    // painel não tem mais razão de existir.
+    const largo = window.matchMedia("(min-width: 860px)");
+    const aoMudar = (e) => { if (e.matches) fechar(false); };
+    if (largo.addEventListener) largo.addEventListener("change", aoMudar);
+    else largo.addListener(aoMudar);
+  }
+
   /* ============ boot ============ */
   function boot() {
     document.body.classList.add("is-loaded");
@@ -319,6 +424,7 @@
     initSpotlight();
     initColinhaLocal();
     initForm();
+    initMenu();
     if (location.search.indexOf("selftest") !== -1) selftest();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

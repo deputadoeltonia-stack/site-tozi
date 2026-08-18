@@ -587,9 +587,20 @@ body[data-tema="tozi"] .aviso { margin-right: 3.8rem; }
 body[data-tema="tozi"] .folha::before {
   content: "";
   position: absolute; z-index: 1; pointer-events: none;
-  right: -2rem; top: -4.9rem;
-  width: 5.6rem; height: 8.8rem;
-  background: url("marca/rosto.svg") center/contain no-repeat;
+  /* Sangria RESPONSIVA. A folha e width:100% com max-width:26rem e margin
+     auto: no desktop sobra margem dos dois lados e a arte cabe inteira ali,
+     como na peca. Num celular de 390px a folha ocupa a largura toda, a
+     margem e zero, e os -2rem fixos de antes iam para fora da tela — o
+     html { overflow-x: clip } segurava, mas o Safari anterior ao 16 ignora
+     clip e o dedo arrastava a pagina de lado.
+     (100vw - 100%) / 2 e exatamente a margem que sobra de cada lado, entao
+     o min() sangra os 2rem quando ha espaco e nada quando nao ha. A arte
+     mantem 5.6rem de largura e fica ancorada a esquerda: o que muda e so
+     quanto dela a caixa deixa aparecer. */
+  --sangra: min(2rem, max(0px, (100vw - 100%) / 2));
+  right: calc(-1 * var(--sangra)); top: -4.9rem;
+  width: calc(3.6rem + var(--sangra)); height: 8.8rem;
+  background: url("marca/rosto.svg") left center / 5.6rem 8.8rem no-repeat;
 }
 
 /* O selo (movido para cá pelo app.js) ocupa o vazio à direita dos senadores,

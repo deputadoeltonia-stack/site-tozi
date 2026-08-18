@@ -22,7 +22,7 @@
   <!-- fontes oficiais do TOZI ID servidas localmente (Google Fonts saiu) -->
   <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/geometos.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/avenir-400.woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=69">
+  <link rel="stylesheet" href="css/style.css?v=71">
 </head>
 <body>
 
@@ -44,6 +44,15 @@
         <a href="#materiais" data-scroll>Materiais</a>
       </nav>
       <a href="#participar" class="btn btn-cta header-cta" data-scroll>Quero participar</a>
+      <!-- Só mobile. Fica oculto até o JS marcar .is-loaded no body: sem script
+           o painel nunca abre, e um botão morto seria pior que nenhum. -->
+      <button type="button" class="nav-toggle" id="nav-toggle"
+              aria-expanded="false" aria-controls="nav-panel" aria-label="Abrir menu">
+        <span class="nav-toggle-cx" aria-hidden="true">
+          <span class="nav-toggle-traco"></span>
+          <span class="nav-toggle-traco"></span>
+        </span>
+      </button>
     </div>
   </header>
 
@@ -538,6 +547,20 @@
     </div>
   </footer>
 
+  <!-- Menu de seções (mobile). Os links são clonados da .nav do header pelo
+       main.js — uma seção nova entra lá e aparece aqui sozinha. `inert` no
+       HTML para o painel nascer fora do foco e fora do leitor de tela. -->
+  <div class="nav-panel" id="nav-panel" inert>
+    <nav class="nav-panel-lista" id="nav-panel-lista" aria-label="Seções do site"></nav>
+    <div class="nav-panel-pe">
+      <p class="nav-panel-num">
+        <span>Deputado Estadual</span>
+        <strong>44447</strong>
+      </p>
+      <a href="#participar" class="btn nav-panel-cta" data-scroll>Quero participar</a>
+    </div>
+  </div>
+
   <!-- Barra fixa (só mobile): participar + WhatsApp direto -->
   <div class="mobile-bar">
     <a href="#participar" class="mobile-cta" data-scroll>Quero participar</a>
@@ -547,6 +570,6 @@
     </a>
   </div>
 
-  <script src="js/main.js?v=10" defer></script>
+  <script src="js/main.js?v=12" defer></script>
 </body>
 </html>

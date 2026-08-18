@@ -1314,3 +1314,180 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .p-card-inner:hover::before,
   .p-card-inner:focus-within::before { opacity: 1; }
 }
+
+/* ---------- menu de seções (mobile) ----------
+   Até 860px a .nav some e o site ficava SEM navegação: a barra fixa de baixo
+   é conversão (participar + WhatsApp), não navegação. Este painel cobre esse
+   vão. O header continua por cima dele (z 61 contra 60) para a marca e o
+   44447 não sumirem enquanto o menu está aberto — num site de campanha o
+   número é o que precisa ficar na cabeça do eleitor. */
+
+/* Botão: dois traços que viram X. Herda currentColor, então acompanha o
+   camaleão do header sem regra extra por pele. */
+.nav-toggle {
+  display: none;                      /* ligado pelo .is-loaded, ver abaixo */
+  flex: none;
+  width: 48px; height: 48px;          /* alvo de toque cheio */
+  align-items: center; justify-content: center;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: #fff;                        /* pele navy */
+  cursor: pointer;
+  transition: color .35s var(--ease);
+}
+.site-header.on-dark .nav-toggle { color: var(--slate); }
+body.is-loaded .nav-toggle { display: inline-flex; }
+@media (min-width: 860px) { body.is-loaded .nav-toggle { display: none; } }
+
+.nav-toggle-cx {
+  position: relative;
+  display: block;
+  width: 26px; height: 14px;
+}
+.nav-toggle-traco {
+  position: absolute; left: 0;
+  width: 100%; height: 2.5px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform .32s var(--ease), width .32s var(--ease);
+}
+/* Traço de baixo mais curto: assimetria dá o que animar na abertura, e
+   diferencia de um hamburger de biblioteca. */
+.nav-toggle-traco:nth-child(1) { top: 0; }
+.nav-toggle-traco:nth-child(2) { bottom: 0; width: 62%; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-traco:nth-child(1) {
+  transform: translateY(5.75px) rotate(45deg);
+}
+.nav-toggle[aria-expanded="true"] .nav-toggle-traco:nth-child(2) {
+  width: 100%;
+  transform: translateY(-5.75px) rotate(-45deg);
+}
+
+/* Painel. A cortina desce de cima com clip-path — mesmo gesto da folha que
+   cobre a capa no scroll, então o menu fala a língua que o site já fala. */
+.nav-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2rem;
+  padding: calc(68px + 2.5rem) var(--gutter) calc(2rem + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(160deg, var(--slate) 0%, var(--slate-2) 100%);
+  overscroll-behavior: contain;
+  overflow-y: auto;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path .42s var(--ease), visibility 0s linear .42s;
+}
+body.menu-aberto .nav-panel {
+  visibility: visible;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path .42s var(--ease), visibility 0s;
+}
+/* O header sobe acima do painel: marca e número seguem legíveis. */
+body.menu-aberto .site-header { z-index: 61; }
+/* Ondas oficiais do TOZI ID marcando o pé, no lugar de decoração inventada. */
+.nav-panel::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 34vh;
+  background: url("../public/assets/marca/ondas.svg") bottom left / cover no-repeat;
+  opacity: .16;
+  pointer-events: none;
+}
+
+.nav-panel-lista { display: flex; flex-direction: column; }
+.nav-panel-lista a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: .35rem 0 .35rem 1.5rem;
+  font-family: var(--font-title);     /* Geometos: caixa alta é o desenho dela */
+  font-size: clamp(1.45rem, 7.5vw, 2.1rem);
+  line-height: 1.05;
+  letter-spacing: .01em;
+  color: rgba(255, 255, 255, .62);
+  text-decoration: none;
+  /* Entrada escalonada. O delay só existe na abertura; no fechamento a
+     cortina sobe e os links vão junto, sem sair um a um. */
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .38s var(--ease), transform .38s var(--ease), color .25s var(--ease);
+}
+body.menu-aberto .nav-panel-lista a {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i, 0) * 45ms + 90ms);
+}
+/* Marcador da seção em que o eleitor está. É informação, não enfeite: o
+   traço só existe no item corrente, e ele é o único em branco cheio. */
+.nav-panel-lista a::before {
+  content: "";
+  position: absolute; left: 0; top: 50%;
+  width: 3px; height: 0;
+  border-radius: 2px;
+  background: var(--brand-lit);
+  transform: translateY(-50%);
+  transition: height .3s var(--ease);
+}
+.nav-panel-lista a[aria-current] { color: #fff; }
+.nav-panel-lista a[aria-current]::before { height: 62%; }
+.nav-panel-lista a:active { color: #fff; }
+
+/* Empilhado: em 390px o número ao lado do botão estourava a largura e saía
+   cortado na borda. Número em cima (é o que o eleitor tem que memorizar),
+   botão embaixo ocupando a linha inteira. */
+.nav-panel-pe {
+  position: relative; z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: .9rem;
+}
+/* Mesmo tratamento dos CTAs do hero: sobre navy, branco com tinta navy.
+   O azul-marca reprovaria contraste no próprio fundo azul. */
+.nav-panel-cta {
+  flex: 1;
+  background: #fff;
+  color: #202051;
+  border-color: #fff;
+  font-weight: 700;
+  min-height: 48px;
+}
+.nav-panel-cta:hover { background: var(--chalk); border-color: var(--chalk); }
+.nav-panel-num {
+  flex: none;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: .55rem;
+  line-height: 1;
+}
+.nav-panel-num span {
+  font-size: .62rem; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--brand-lit);
+}
+.nav-panel-num strong {
+  font-family: var(--font-title);
+  font-size: 1.5rem; font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+  color: #fff;
+}
+
+/* A barra fixa de baixo sairia por cima do pé do painel. */
+body.menu-aberto .mobile-bar { opacity: 0; pointer-events: none; }
+.mobile-bar { transition: opacity .2s var(--ease); }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-panel { transition: visibility 0s linear .01s; clip-path: none; opacity: 0; }
+  body.menu-aberto .nav-panel { opacity: 1; transition: visibility 0s; }
+  .nav-panel-lista a,
+  body.menu-aberto .nav-panel-lista a { transform: none; transition-delay: 0s; }
+  .nav-toggle-traco { transition: none; }
+}
