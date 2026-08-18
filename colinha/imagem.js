@@ -51,7 +51,11 @@ export const TEMAS = {
     // Simbolo e rosto em traco do manual, os mesmos arquivos da tela. Se o
     // navegador nao desenhar o SVG, cai nas listras retas de topoRisco.
     simbolo: 'marca/ondas.svg', rosto: 'marca/rosto.svg',
-    seloNoCorpo: true, // o selo na faixa dos senadores, como na peca
+    seloNoCorpo: true,
+    // Ultima linha (presidente), igual a tela: nos senadores o selo caia
+    // em cima do nome assim que o eleitor digitava. bordaDireita ja
+    // encolhe o nome na linha que hospeda o selo.
+    seloLinha: 5.05,
     // Numerais retos: a Geometos nao tem face italica, entao 'italic'
     // virava oblique sintetico. O skew inclina a tinta sem alterar a
     // largura de avanco, e o textAlign 'center' centra pelo avanco —
@@ -774,7 +778,7 @@ export async function desenhar(colinha, config) {
   ctx.font = fonte(t, 700, COND, 26, { texto: true })
   ctx.fillText(location.hostname, L / 2, A - 50)
   ctx.font = fonte(t, 500, COND, 24, { texto: true })
-  ctx.fillText('Confira sempre na urna.', L / 2, A - 18)
+  ctx.fillText('Confira sempre o n\u00famero do candidato na urna.', L / 2, A - 18)
 
   if (FAIXA) {
     // A faixa lima fecha a peca com o MESMO pattern oficial do topo, na
