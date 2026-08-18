@@ -1,0 +1,67 @@
+# Configuracao do servidor (HostGator = Apache). Tudo dentro de <IfModule>:
+# num servidor sem o modulo a diretiva vira comentario em vez de derrubar o
+# site inteiro com 500 — .htaccess quebrado nao falha na pagina, falha em
+# TODAS elas.
+
+# ---------------------------------------------------------------------------
+# Compressao
+# ---------------------------------------------------------------------------
+# O mod_deflate da HostGator ja comprime html/css/js por padrao, mas NAO
+# comprime application/json — e o candidatos-sp.json, que a colinha busca em
+# toda abertura, e o maior arquivo do site depois das fotos: 112 KB crus na
+# rede, ~25 KB comprimido. Medido em 18/08/2026:
+#   curl -H 'Accept-Encoding: gzip' .../colinha/candidatos-sp.json
+#   -> content-length 112356, sem content-encoding
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE application/xml text/xml
+  AddOutputFilterByType DEFLATE text/plain
+  # woff2 ja e comprimido por dentro: passar de novo so gasta CPU dos dois lados.
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Cache
+# ---------------------------------------------------------------------------
+# Divisao deliberada, a um mes e meio da eleicao:
+#
+#   assets (fotos, fontes, marca)  -> 1 ano. Sao imutaveis na pratica: a foto
+#     de um candidato nao muda, e trocar a arte significa trocar o arquivo.
+#
+#   html, css, js, json            -> no-cache. NAO e "sem cache": o navegador
+#     guarda e revalida, entao a resposta comum e um 304 sem corpo. Uma
+#     correcao publicada as 22h de um sabado chega em quem ja visitou o site.
+#     Com max-age longo, nao chegaria — e o /colinha/ nao tem ?v= no <link>
+#     nem no <script type=module> para furar cache. Correcao vale mais que o
+#     round trip.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(webp|jpg|jpeg|png|gif|ico|svg|woff2|mp4)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(html|css|js|json|xml|txt)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+
+  # Sniffing de tipo desligado: um .json servido como texto nao vira script.
+  Header set X-Content-Type-Options "nosniff"
+  # O Referer sai so como origem para fora do site. As URLs da colinha levam
+  # os numeros que a pessoa digitou (?presidente=13&...) — isso e escolha de
+  # voto, e nao acompanha ela ate o site de terceiro.
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Tipos MIME
+# ---------------------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType font/woff2 .woff2
+  # Sem isto o Apache antigo entrega .mjs/.js de modulo como text/plain e o
+  # import ES falha com "disallowed MIME type".
+  AddType text/javascript .js .mjs
+</IfModule>
+
+# Sem bloco de "esconder bastidor": conferido em 18/08/2026, /scripts/,
+# /vercel.json e /.git/ ja respondem 404/403 no ar. Regra que nao protege
+# nada so cria chance de 500 num Apache 2.2, que nao entende `Require`.

@@ -151,6 +151,39 @@
     }, 2500);
   }
 
+  /* ============ pôster dos vídeos, só quando chega perto ============
+     `preload="none"` segura o vídeo, não o pôster: o navegador busca a
+     imagem do pôster na hora, e eram 79 KB (27 + 52) gastos na abertura por
+     duas imagens sete seções abaixo. rootMargin de 400px promove o pôster
+     antes de a pessoa chegar, então ela nunca vê o quadro vazio.
+     Sem IntersectionObserver o pôster entra de uma vez — o navegador velho
+     volta ao comportamento de antes, que funcionava. */
+  function initPosters() {
+    const videos = document.querySelectorAll("video[data-poster]");
+    if (!videos.length) return;
+    const por = (v) => {
+      v.poster = v.dataset.poster;
+      v.removeAttribute("data-poster");
+    };
+    if (!("IntersectionObserver" in window)) { videos.forEach(por); return; }
+    let respondeu = false;
+    const io = new IntersectionObserver((entries) => {
+      respondeu = true;
+      entries.forEach((en) => {
+        if (en.isIntersecting) { por(en.target); io.unobserve(en.target); }
+      });
+    }, { rootMargin: "400px 0px" });
+    videos.forEach((v) => io.observe(v));
+    // O IO existe mas pode ficar mudo (aba em segundo plano, viewport de
+    // altura zero). Sem rede de segurança o vídeo abriria em quadro preto.
+    // Amarrada à PRIMEIRA rolagem, não a um timer: quem não desce a página
+    // continua sem pagar os 79 KB, que é o motivo de tudo isto existir.
+    window.addEventListener("scroll", function aoRolar() {
+      window.removeEventListener("scroll", aoRolar);
+      if (!respondeu) videos.forEach(por);
+    }, { passive: true, once: true });
+  }
+
   /* ============ header camaleão ============
      Seções escuras levam [data-header-dark]; quando uma delas passa sob a
      linha do header, ele veste a pele navy (.on-dark). Scroll + rAF em vez
@@ -280,9 +313,31 @@
       .finally(() => { btn.disabled = false; });
   }
 
+  /* Abre a conexão com o Google no primeiro toque no formulário, não no
+     envio. Sem isto, o POST do lead começa com DNS + TCP + TLS num host novo
+     — ~300 ms de espera olhando o botão travado, no exato momento em que a
+     pessoa decidiu se cadastrar. Ancorado no foco (e não no <head>) para que
+     quem só lê a página não pague conexão nenhuma. */
+  function preconectaDestino(form) {
+    if (!LEAD_ENDPOINT) return;
+    let feito = false;
+    const abrir = () => {
+      if (feito) return;
+      feito = true;
+      const l = document.createElement("link");
+      l.rel = "preconnect";
+      l.href = new URL(LEAD_ENDPOINT).origin;
+      l.crossOrigin = "";
+      document.head.appendChild(l);
+    };
+    form.addEventListener("focusin", abrir, { once: true });
+    form.addEventListener("pointerdown", abrir, { once: true });
+  }
+
   function initForm() {
     const form = document.getElementById("lead-form");
     if (!form) return;
+    preconectaDestino(form);
     const nome = form.nome, tel = form.telefone, lgpd = form.lgpd;
     const nomeErr = document.getElementById("nome-err");
     const telErr = document.getElementById("tel-err");
@@ -439,6 +494,7 @@
     document.body.classList.add("is-loaded");
     initHeaderTheme();
     initReveal();
+    initPosters();
     initSpotlight();
     initColinhaLocal();
     initForm();

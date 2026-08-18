@@ -42,9 +42,18 @@
   <!-- preload do LCP (foto do hero) — busca cedo, acelera a abertura -->
   <link rel="preload" as="image" href="public/assets/tozi.webp" type="image/webp" fetchpriority="high">
 
-  <!-- fontes oficiais do TOZI ID servidas localmente (Google Fonts saiu) -->
+  <!-- fontes oficiais do TOZI ID servidas localmente (Google Fonts saiu).
+       As QUATRO que a primeira dobra usa, não duas: avenir-500 (que cobre
+       500-800, o peso de 12 elementos visíveis de saída) e geometos-black
+       só eram descobertas depois de o CSS ser baixado e casar uma regra —
+       medido, começavam 255 ms atrás das outras duas e o texto trocava de
+       fonte na cara de quem já estava lendo. As outras duas do @font-face
+       (avenir-300 e a itálica) ficam de fora de propósito: nenhuma regra
+       acima da dobra as usa, e preload de fonte não usada é bloqueio puro. -->
   <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/geometos.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/geometos-black.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/avenir-400.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/avenir-500.woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css?v=73">
 </head>
 <body>
@@ -400,10 +409,16 @@
           <p class="section-kicker">Quem já andou junto.</p>
         </div>
 
+        <!-- data-poster, nao poster: `preload="none"` segura o VIDEO, mas o
+             navegador busca o poster na hora, e sao 79 KB gastos na primeira
+             dobra por duas imagens que so aparecem depois de sete seções de
+             rolagem. O main.js promove data-poster -> poster quando a seção
+             se aproxima. Sem JS o vídeo abre no primeiro quadro, que é o
+             comportamento nativo — nada quebra. -->
         <div class="video-deps">
           <figure class="vdep">
             <video controls preload="none" playsinline
-                   poster="public/assets/videos/poster-1.jpg"
+                   data-poster="public/assets/videos/poster-1.jpg"
                    width="848" height="478">
               <source src="public/assets/videos/depoimento-1.mp4" type="video/mp4">
               Seu navegador não reproduz este vídeo.
@@ -412,7 +427,7 @@
           </figure>
           <figure class="vdep vdep-vertical">
             <video controls preload="none" playsinline
-                   poster="public/assets/videos/poster-2.jpg"
+                   data-poster="public/assets/videos/poster-2.jpg"
                    width="576" height="1024">
               <source src="public/assets/videos/depoimento-2.mp4" type="video/mp4">
               Seu navegador não reproduz este vídeo.
@@ -422,6 +437,12 @@
         </div>
 
         <div class="gallery" aria-label="Galeria de fotos">
+          <!-- srcset nas tres maiores: a versao de 1200px servia 100 KB para
+               um celular de 335 CSS px, que precisa de 670. O `sizes` descreve a
+               largura REAL do tile (calc, com as calhas descontadas): com
+               100vw o browser pedia 750px, nao achava candidato e voltava
+               para o grande — srcset sem sizes honesto nao economiza nada. A de 675px
+               (condecoracao) ja esta no tamanho certo e fica como estava. -->
           <figure class="g-tile g-portrait">
             <picture>
               <source srcset="public/assets/galeria/condecoracao.webp?v=2" type="image/webp">
@@ -431,21 +452,21 @@
           </figure>
           <figure class="g-tile g-portrait">
             <picture>
-              <source srcset="public/assets/galeria/aula.webp" type="image/webp">
+              <source srcset="public/assets/galeria/aula-800.webp 800w, public/assets/galeria/aula.webp 900w" sizes="(min-width: 700px) 504px, calc(100vw - 40px)" type="image/webp">
               <img src="public/assets/galeria/aula.jpg" alt="Prof Tozi ministrando aula na Faculdade Cristã da Cidade" width="900" height="1200" loading="lazy" decoding="async">
             </picture>
             <figcaption>Em aula na Faculdade Cristã da Cidade (2025)</figcaption>
           </figure>
           <figure class="g-tile g-wide">
             <picture>
-              <source srcset="public/assets/galeria/auditorio.webp" type="image/webp">
+              <source srcset="public/assets/galeria/auditorio-800.webp 800w, public/assets/galeria/auditorio.webp 1200w" sizes="(min-width: 700px) 1024px, calc(100vw - 40px)" type="image/webp">
               <img src="public/assets/galeria/auditorio.jpg" alt="Prof Tozi em palestra no Colégio Shunji Nishimura, em Pompeia/SP" width="1200" height="675" loading="lazy" decoding="async">
             </picture>
             <figcaption>Palestra no Colégio Shunji Nishimura – Pompeia/SP</figcaption>
           </figure>
           <figure class="g-tile g-wide">
             <picture>
-              <source srcset="public/assets/galeria/estudantes.webp" type="image/webp">
+              <source srcset="public/assets/galeria/estudantes-800.webp 800w, public/assets/galeria/estudantes.webp 1200w" sizes="(min-width: 700px) 1024px, calc(100vw - 40px)" type="image/webp">
               <img src="public/assets/galeria/estudantes.jpg" alt="Prof Tozi com estudantes no Colégio Shunji Nishimura, em Pompeia/SP" width="1200" height="675" loading="lazy" decoding="async">
             </picture>
             <figcaption>Palestra no Colégio Shunji Nishimura – Pompeia/SP</figcaption>
@@ -597,6 +618,6 @@
     </a>
   </div>
 
-  <script src="js/main.js?v=13" defer></script>
+  <script src="js/main.js?v=16" defer></script>
 </body>
 </html>
