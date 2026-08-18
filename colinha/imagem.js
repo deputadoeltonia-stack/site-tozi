@@ -52,7 +52,12 @@ export const TEMAS = {
     // navegador nao desenhar o SVG, cai nas listras retas de topoRisco.
     simbolo: 'marca/ondas.svg', rosto: 'marca/rosto.svg',
     seloNoCorpo: true, // o selo na faixa dos senadores, como na peca
-    digitoItalico: true, // numerais inclinados da peca dele
+    // Numerais retos: a Geometos nao tem face italica, entao 'italic'
+    // virava oblique sintetico. O skew inclina a tinta sem alterar a
+    // largura de avanco, e o textAlign 'center' centra pelo avanco —
+    // o digito saia visivelmente jogado para a direita na caixa.
+    digitoItalico: false,
+    seloItalico: false,
     titulo: '"Geometos Neue", "Geometos", system-ui, sans-serif',
     texto: '"Avenir LT Std", system-ui, -apple-system, sans-serif',
   },
@@ -470,7 +475,7 @@ function desenharSelo(ctx, t, slot, imgSelo, seloLogo, seloLogo2, seloTrio) {
     }
 
     ctx.fillStyle = t.seloNumero ?? t.destaque
-    ctx.font = fonte(t, 800, COND, 46, { italico: true })
+    ctx.font = fonte(t, 800, COND, 46, { italico: t.seloItalico !== false })
     ctx.fillText(slot.numero, cx, cy + 74)
     ctx.restore()
     ctx.textAlign = 'left'
@@ -528,7 +533,7 @@ function desenharSelo(ctx, t, slot, imgSelo, seloLogo, seloLogo2, seloTrio) {
   ctx.fillStyle = t.seloNumero ?? (t.peca ? t.destaque : t.seloAnel ?? t.destaque)
   // Na peca do Dr. Elton o numero domina o selo; nos outros temas segue menor.
   const numTam = t.peca ? 54 : 44
-  ctx.font = fonte(t, 800, COND, numTam, { italico: true })
+  ctx.font = fonte(t, 800, COND, numTam, { italico: t.seloItalico !== false })
   ctx.fillText(slot.numero, cx, cy + (t.peca ? 70 : 64))
   ctx.restore()
   ctx.textAlign = 'left'

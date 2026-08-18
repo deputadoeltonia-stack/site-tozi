@@ -486,8 +486,16 @@ body[data-tema="tozi"] .campo.travado:not(.proprio) .foto-travada {
 body:is([data-tema="tozi"], [data-tema="dulce"]) .selo { transform: none; }
 body[data-tema="tozi"] .selo { background: var(--acento); border-color: #fff; }
 body[data-tema="tozi"] .selo-numero { color: #fff; }
+/* Sem italico: a Geometos nao tem face italica (fonts/ so traz geometos.woff2
+   e geometos-black.woff2), entao o navegador sintetizava um oblique por skew.
+   O skew inclina o glifo mas nao mexe na largura de avanco, e o numero saia
+   encostado a direita dentro da caixa — era o mesmo defeito que o "fora de
+   centro". Upright resolve os dois. O text-indent zera a folga que o
+   letter-spacing do .selo-numero deixa depois do ultimo digito, que puxava o
+   texto centralizado meio passo para a esquerda. */
 body[data-tema="tozi"] .selo-numero,
-body[data-tema="tozi"] .digito { font-style: italic; }
+body[data-tema="tozi"] .digito { font-style: normal; }
+body[data-tema="tozi"] .selo-numero { text-indent: .04em; }
 /* Geometos não tem eixo de largura: o font-stretch do tema padrão viraria
    síntese e engorda a letra. */
 body:is([data-tema="tozi"], [data-tema="dulce"]) .marca,
