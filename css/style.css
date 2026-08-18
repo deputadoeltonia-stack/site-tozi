@@ -916,6 +916,19 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   background: #000;
   border-radius: var(--radius);
 }
+/* Legenda oculta do <track>. O padrão do navegador é branco sobre preto
+   translúcido, que já funciona; o que se ajusta aqui é o corpo, porque no
+   vídeo vertical (340px de largura) o tamanho nativo do Safari sai grande
+   demais e cobre o rosto de quem fala. `::cue` só aceita um punhado de
+   propriedades — cor, fundo, fonte, sombra —, então não há layout a fazer. */
+.vdep video::cue {
+  font-family: var(--font-body);
+  font-size: .82em;
+  line-height: 1.35;
+  background: rgba(9, 11, 26, .82);
+  color: #fff;
+}
+
 /* vertical não fica gigante — e a legenda acompanha a MESMA medida do
    vídeo, senão ela vaza a célula do grid e fica mais larga que a peça */
 .vdep-vertical video,

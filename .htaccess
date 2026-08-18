@@ -57,6 +57,9 @@
 <IfModule mod_mime.c>
   AddType image/webp .webp
   AddType font/woff2 .woff2
+  # Sem isto o Apache entrega a legenda como text/plain e o <track> e
+  # descartado em silencio: o menu de legendas do player some, sem erro.
+  AddType text/vtt .vtt
   # Sem isto o Apache antigo entrega .mjs/.js de modulo como text/plain e o
   # import ES falha com "disallowed MIME type".
   AddType text/javascript .js .mjs

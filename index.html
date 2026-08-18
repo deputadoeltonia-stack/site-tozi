@@ -54,7 +54,7 @@
   <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/geometos-black.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/avenir-400.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="public/assets/fonts/avenir-500.woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=73">
+  <link rel="stylesheet" href="css/style.css?v=74">
 </head>
 <body>
 
@@ -414,13 +414,22 @@
              dobra por duas imagens que so aparecem depois de sete seções de
              rolagem. O main.js promove data-poster -> poster quando a seção
              se aproxima. Sem JS o vídeo abre no primeiro quadro, que é o
-             comportamento nativo — nada quebra. -->
+             comportamento nativo — nada quebra.
+
+             As legendas entram por <track> e nascem LIGADAS (`default`): o
+             depoimento é inteiramente falado, e o eleitor surdo não deveria
+             ter que caçar a opção no menu do player para acessar o conteúdo.
+             Quem ouve desliga em um clique. O .htaccess declara text/vtt —
+             servido como text/plain, o navegador descarta a faixa em
+             silêncio e o menu de legendas some sem erro nenhum. -->
         <div class="video-deps">
           <figure class="vdep">
             <video controls preload="none" playsinline
                    data-poster="public/assets/videos/poster-1.jpg"
                    width="848" height="478">
               <source src="public/assets/videos/depoimento-1.mp4" type="video/mp4">
+              <track kind="captions" srclang="pt-BR" label="Português"
+                     src="public/assets/videos/depoimento-1.pt-BR.vtt" default>
               Seu navegador não reproduz este vídeo.
             </video>
             <figcaption><strong>Luciana de Aquino</strong> · Diretora acadêmica da Fatec de São José dos Campos, trabalhou mais de 15 anos ao lado do Prof Tozi</figcaption>
@@ -430,6 +439,8 @@
                    data-poster="public/assets/videos/poster-2.jpg"
                    width="576" height="1024">
               <source src="public/assets/videos/depoimento-2.mp4" type="video/mp4">
+              <track kind="captions" srclang="pt-BR" label="Português"
+                     src="public/assets/videos/depoimento-2.pt-BR.vtt" default>
               Seu navegador não reproduz este vídeo.
             </video>
             <figcaption><strong>Marcos Nascimento</strong> · ex-aluno de Logística na Fatec de São José dos Campos</figcaption>
