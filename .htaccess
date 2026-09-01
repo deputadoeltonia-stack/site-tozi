@@ -68,3 +68,18 @@
 # Sem bloco de "esconder bastidor": conferido em 18/08/2026, /scripts/,
 # /vercel.json e /.git/ ja respondem 404/403 no ar. Regra que nao protege
 # nada so cria chance de 500 num Apache 2.2, que nao entende `Require`.
+
+# ---------------------------------------------------------------------------
+# HTTPS obrigatorio
+# ---------------------------------------------------------------------------
+# No VPS quem redirecionava http->https era o Caddy, de graca. Servindo pela
+# HostGator (Apache) nao redireciona ninguem: conferido em 31/08/2026,
+# http://proftozi44447.com.br/ devolvia 200 em texto claro — com o formulario
+# de nome e telefone dentro. A segunda condicao evita laco infinito se um dia
+# houver proxy na frente terminando o TLS.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
