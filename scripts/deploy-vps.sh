@@ -3,12 +3,22 @@
 #   bash scripts/deploy-vps.sh          # envia
 #   bash scripts/deploy-vps.sh --dry    # mostra o que mudaria, sem enviar
 #
-# ATENÇÃO (conferido em 18/08/2026): proftozi44447.com.br NÃO aponta mais para
-# este VPS. O A do domínio resolve 192.185.131.84 (HostGator) e é de lá que o
-# site é servido; o VPS só devolve um 308 para https e sai de cena. Rodar este
-# script hoje sobe arquivos que ninguém serve — e a conferência do fim imprime
-# um HTTP 308 que passa por sinal de vida. Publicar de verdade = enviar para a
-# HostGator. Guardado porque colinhavirtual.dreltonai.com.br continua no VPS.
+# ESTE SCRIPT NÃO PUBLICA MAIS NADA. Use scripts/deploy-hostgator.sh.
+#
+# Histórico, porque o aviso anterior confundiu: em 18/08/2026 anotou-se aqui que
+# o domínio tinha saído do VPS. Entre 18/08 e 31/08 ele VOLTOU — no início de
+# 31/08 o A resolvia 187.127.17.18 e o site no ar saía daqui mesmo, de
+# /opt/site-tozi. Na mesma data o A foi para 192.185.131.84 (HostGator), que é
+# de onde o site sai agora.
+#
+# Além disso, `root@187.127.17.18` responde "Permission denied (publickey)"
+# desde a revogação de 30/08/2026: o rsync abaixo falha na autenticação antes
+# de enviar qualquer coisa. A conta `junior` (ssh vps-leitura) só lê —
+# /opt/site-tozi dá `group:leitura-total:r-x` por ACL.
+#
+# Guardado porque colinhavirtual.dreltonai.com.br e
+# central4412.proftozi44447.com.br continuam servidos por este VPS, e o dia que
+# o root voltar este é o caminho para eles.
 #
 # O que NÃO sobe está em .vercelignore — mesmo arquivo que a Vercel usa, pra
 # não existirem duas listas de "o que é site e o que é bastidor" divergindo.
