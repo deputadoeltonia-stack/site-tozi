@@ -996,6 +996,19 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 @media (prefers-reduced-motion: reduce) { .material-card { transition: none; } }
 
+/* --- materiais: mais de um card na secao ---
+   A .section-body nao tinha gap porque so existia a Colinha. A miniatura do
+   folder entra no lugar do numero da urna, na mesma coluna "auto" do grid. */
+.materiais-lista { display: grid; gap: clamp(1rem, 2.5vw, 1.5rem); }
+.material-thumb {
+  display: block; width: 100%; height: auto; justify-self: center;
+  border-radius: calc(var(--radius) / 2);
+  box-shadow: 0 18px 36px -22px rgba(16, 19, 46, .75);
+}
+@media (min-width: 720px) {
+  .material-thumb { width: clamp(260px, 30vw, 380px); justify-self: end; }
+}
+
 /* --- botao neon da Colinha ---
    O CTA azul-marca sobre o card navy quase nao separava (mesmo matiz, mesma
    familia de luminancia). Aqui ele vira placa acesa: mesmo matiz do Pantone
