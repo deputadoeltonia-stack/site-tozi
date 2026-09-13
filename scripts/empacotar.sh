@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Monta o ZIP do site para subir na HostGator (cPanel > Gerenciador de
-# Arquivos > Extract). Publicar e manual, entao o que da para automatizar e
-# EMPACOTAR CERTO — que e onde o deploy manual costuma falhar.
+# Monta o ZIP do site, conferido (.htaccess, privacidade, nada de bastidor).
+# Nasceu para subir na HostGator (cPanel > Gerenciador de Arquivos > Extract).
+# Desde 05/09/2026 o site sai da VPS nova e NAO da HostGator: publicar e
+# scripts/deploy-vps105.sh. Este ZIP ficou como pacote conferido, nao deploy.
 #
 #   bash scripts/empacotar.sh
 #
