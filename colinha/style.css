@@ -345,6 +345,35 @@ button.foto:hover, button.foto:focus-visible { border-color: var(--marinho); out
 /* Campo ainda vazio: tracejado reforca que ali se pode tocar para buscar. */
 button.foto:not(.tem-foto) { border-style: dashed; border-color: var(--marinho); }
 
+/* Campo livre e vazio: a foto e o botao "BUSCAR NOME" por extenso — lupa
+   grande e texto — e a lupa miuda do canto sai (ja esta no meio). Com
+   candidato escolhido volta a foto, e a lupa do canto diz que da para trocar. */
+.foto.vazio .foto-lupa { display: none; }
+.foto.vazio .foto-ph {
+  align-content: center; gap: .2rem;
+  color: var(--marinho);
+}
+.foto.vazio .foto-ph svg { width: 1.35rem; height: 1.35rem; opacity: 1; }
+.foto-cta {
+  font-size: .6rem; font-weight: 800; line-height: 1.1;
+  text-transform: uppercase; letter-spacing: .02em; text-align: center;
+}
+
+/* Neon leve (pedido de 28/09/2026): o lima de cada campanha contorna o que se
+   toca para buscar — ponto aceso no titulo, halo na caixa, traco e brilho no
+   botao BUSCAR NOME. So contorno e brilho: bloco inteiro em lima pintaria
+   mais que os proprios numeros. */
+.bg-titulo::before {
+  content: ""; display: inline-block; vertical-align: middle;
+  width: .5em; height: .5em; margin: -.1em .4em 0 0; border-radius: 50%;
+  background: var(--lima);
+  box-shadow: 0 0 6px var(--lima), 0 0 12px color-mix(in srgb, var(--lima) 60%, transparent);
+}
+button.foto.vazio {
+  border: 2px dashed var(--lima);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--lima) 50%, transparent);
+}
+
 .foto-lupa {
   position: absolute; right: -1px; bottom: -1px;
   width: 1.35rem; height: 1.35rem;
@@ -471,6 +500,48 @@ body[data-tema="elton"] .digito { font-size: 21.6cqw; }
 /* Um campo unico acima da folha. Pilula alta (52px) com a lupa dentro, na
    cor da marca: o primeiro toque da pagina precisa se anunciar sozinho. */
 .busca-geral { position: relative; margin: 0 0 1.1rem; }
+/* Titulo fora da caixa, no mesmo desenho dos rotulos de cargo: fica visivel
+   mesmo depois que o placeholder some sob o que foi digitado. */
+.bg-titulo {
+  display: block; margin: 0 0 .35rem;
+  font-size: .9rem; font-weight: 800; line-height: 1.15;
+  text-transform: uppercase; color: var(--rot);
+}
+body[data-tema="elton"] .bg-titulo { font-family: var(--titulo); }
+.bg-modos { display: flex; gap: .5rem; margin: 0 0 .5rem; }
+.bg-modo {
+  flex: 1; min-height: 44px; border-radius: 999px;
+  border: 2px solid var(--marca); background: var(--surface); color: var(--marca);
+  font: inherit; font-size: .95rem; font-weight: 800; text-transform: uppercase; cursor: pointer;
+}
+.bg-modo.ativo {
+  background: var(--marca); color: var(--marca-txt);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--lima) 70%, transparent),
+              0 0 12px color-mix(in srgb, var(--lima) 55%, transparent);
+}
+/* Botao "BUSCAR PELO NOME" na faixa das caixas, logo a direita delas e com a
+   altura delas — alinhado com o que se preenche. Some quando o campo tem
+   candidato (.campo:not(.vazio)). Fica ACIMA do .entrada transparente
+   (z-index), senao o toque cairia no input. No cargo de 5 digitos nao sobra
+   faixa e ele vai para a linha do rotulo, em uma linha so. */
+.busca-nome-btn {
+  position: relative; z-index: 1; flex: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: .15rem;
+  border: 0; border-radius: 7px; cursor: pointer;
+  background: var(--marca); color: var(--marca-txt);
+  font: inherit; font-size: .58rem; font-weight: 800; letter-spacing: .02em;
+  line-height: 1.15; text-transform: uppercase; text-align: center;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--lima) 60%, transparent),
+              0 0 10px color-mix(in srgb, var(--lima) 50%, transparent);
+}
+.busca-nome-btn svg { width: 1.1rem; height: 1.1rem; flex: none; }
+.digitos > .busca-nome-btn { flex-direction: column; width: 4.6rem; align-self: stretch; }
+.rotulo > .busca-nome-btn {
+  margin-left: auto; align-self: center; flex-direction: row; gap: .3rem;
+  min-height: 2rem; padding: 0 .6rem; border-radius: 999px; white-space: nowrap;
+}
+.rotulo > .busca-nome-btn svg { width: .9rem; height: .9rem; }
+.campo:not(.vazio) .busca-nome-btn { display: none; }
 .bg-caixa {
   display: flex; align-items: center; gap: .55rem;
   min-height: 52px; padding: 0 .9rem;
@@ -479,6 +550,15 @@ body[data-tema="elton"] .digito { font-size: 21.6cqw; }
   box-shadow: 0 2px 10px rgba(0, 0, 0, .07);
 }
 .bg-caixa:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--marca) 25%, transparent); }
+/* Neon leve: halo lima na caixa (ver bloco "Neon leve" acima). */
+.bg-caixa {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lima) 55%, transparent),
+              0 0 14px color-mix(in srgb, var(--lima) 45%, transparent);
+}
+.bg-caixa:focus-within {
+  box-shadow: 0 0 0 3px var(--lima),
+              0 0 18px color-mix(in srgb, var(--lima) 65%, transparent);
+}
 .bg-lupa { width: 22px; height: 22px; flex: none; color: var(--marca); }
 .bg-input {
   flex: 1; min-width: 0; border: 0; background: none; outline: none;
@@ -1104,7 +1184,7 @@ body[data-tema="santinho"] {
 /* Texto que assenta direto no navy. Nao mexe em --rot/--mut de proposito:
    os dois tambem pintam coisas DENTRO das caixas brancas (a silhueta da
    foto, o placeholder da busca), que continuam precisando ser escuras. */
-body[data-tema="santinho"] :is(.rotulo, .partido),
+body[data-tema="santinho"] :is(.rotulo, .partido, .bg-titulo),
 body[data-tema="santinho"] .rotulo > span:first-child::after { color: #c3d3e8; }
 body[data-tema="santinho"] .nome { color: #fff; }
 body[data-tema="santinho"] :is(.rodape, .legal, .carregando) { color: #b4c6de; }

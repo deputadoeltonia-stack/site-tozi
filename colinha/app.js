@@ -108,9 +108,18 @@ const LUPA = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
   '<circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/>' +
   '<path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>'
 
+// Campo livre ainda vazio: no lugar da silhueta, a lupa grande e o texto
+// "BUSCAR NOME". A silhueta com a lupa miuda no canto nao dizia o que o
+// botao faz — eleitor nao sabia que dava para buscar pelo nome (28/09/2026).
+const BUSCAR_NOME = LUPA + '<span class="foto-cta">Buscar<br>nome</span>'
+
+function placeholderVazio(slot) {
+  return slot.travado ? SILHUETA : BUSCAR_NOME
+}
+
 function fotoInterna(slot) {
   return `<img class="foto-img" id="fotoimg-${slot.id}" alt="" hidden>` +
-    `<span class="foto-ph" id="fotoph-${slot.id}" aria-hidden="true">${SILHUETA}</span>` +
+    `<span class="foto-ph" id="fotoph-${slot.id}" aria-hidden="true">${placeholderVazio(slot)}</span>` +
     (slot.travado ? '' : `<span class="foto-lupa" aria-hidden="true">${LUPA}</span>`)
 }
 
@@ -130,12 +139,23 @@ function linhaHTML(slot) {
     : `<button type="button" class="foto" id="foto-${slot.id}"
         aria-label="Buscar ${slot.rotulo} por nome">${fotoInterna(slot)}</button>`
 
+  // Segundo caminho para a busca por nome, por extenso, na faixa das caixas e
+  // logo a direita delas — alinhado com o que se preenche. Some quando o
+  // campo tem candidato (CSS, .campo:not(.vazio)). No cargo de 5 digitos as
+  // caixas tomam a faixa inteira: ali ele sobe para a linha do rotulo.
+  // Medido em 390px: ate 3 digitos sobram >= 87px a direita, mesmo no campo
+  // que hospeda o selo (presidente do Dr. Elton), e o botao mede 74px.
+  const buscarNome = travado ? '' :
+    `<button type="button" class="busca-nome-btn" id="bn-${slot.id}">${LUPA}<span>Buscar</span><span>pelo nome</span></button>`
+  const naFaixa = slot.digitos <= 3
+
   return `
     <div class="campo${travado ? ' travado' : ''}${slot.proprio ? ' proprio' : ''}" id="campo-${slot.id}">
       ${foto}
       <div class="campo-corpo">
         <p class="rotulo">
           <span>${slot.rotulo}</span><span class="nome" id="nome-${slot.id}" aria-live="polite"></span>
+          ${naFaixa ? '' : buscarNome}
         </p>
         <div class="digitos">
           ${caixas}
@@ -145,6 +165,7 @@ function linhaHTML(slot) {
                  aria-label="${slot.rotulo}, ${slot.digitos} dígitos"
                  aria-describedby="nome-${slot.id} erro-${slot.id}"
                  ${travado ? 'readonly tabindex="-1"' : ''}>
+          ${naFaixa ? buscarNome : ''}
         </div>
         <p class="erro" id="erro-${slot.id}" role="alert"></p>
       </div>
@@ -165,8 +186,10 @@ function montarMarcacao() {
         const n = input.value.length
         requestAnimationFrame(() => input.setSelectionRange(n, n))
       })
-      // A foto abre a gaveta de busca por nome para esse cargo.
+      // A foto e o botao a direita abrem a gaveta de busca por nome do cargo.
       document.getElementById(`foto-${c.id}`)
+        .addEventListener('click', () => abrirBusca(c))
+      document.getElementById(`bn-${c.id}`)
         .addEventListener('click', () => abrirBusca(c))
     }
   }
@@ -174,14 +197,14 @@ function montarMarcacao() {
 
 // --- foto -------------------------------------------------------------
 
-// Foto vazia: silhueta se o campo esta em branco, inicial do nome se ha
-// candidato mas sem foto no acervo.
+// Foto vazia: "BUSCAR NOME" (ou silhueta, no travado) se o campo esta em
+// branco, inicial do nome se ha candidato mas sem foto no acervo.
 function preencherPlaceholder(ph, slot) {
   if (slot.nome) {
     ph.textContent = slot.nome.trim()[0] ?? ''
     ph.classList.add('inicial')
   } else {
-    ph.innerHTML = SILHUETA
+    ph.innerHTML = placeholderVazio(slot)
     ph.classList.remove('inicial')
   }
 }
@@ -191,6 +214,8 @@ function atualizarFoto(slot) {
   const ph = document.getElementById(`fotoph-${slot.id}`)
   const caixa = document.getElementById(`foto-${slot.id}`)
   caixa.classList.toggle('tem-foto', Boolean(slot.foto))
+  // .vazio esconde a lupa do canto: o placeholder "BUSCAR NOME" ja a traz.
+  caixa.classList.toggle('vazio', !slot.nome)
 
   if (slot.foto) {
     const src = `fotos/${slot.foto}.jpg`
@@ -264,6 +289,7 @@ function render() {
     }
     erro.textContent = slot.erro ?? ''
     campo.classList.toggle('tem-erro', Boolean(slot.erro))
+    campo.classList.toggle('vazio', !slot.nome)
     atualizarFoto(slot)
   }
 
@@ -523,6 +549,16 @@ function bgBuscar() {
   bg.lista.hidden = false
 }
 
+// Modo "por numero" / "por nome": muda so placeholder e teclado; a busca em
+// si e a mesma (buscarGlobal decide pelo que foi digitado).
+for (const b of document.querySelectorAll('.bg-modo')) {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.bg-modo').forEach((x) => x.classList.toggle('ativo', x === b))
+    bg.input.placeholder = b.dataset.ph
+    bg.input.inputMode = b.dataset.modo === 'numero' ? 'numeric' : 'text'
+    bg.input.focus()
+  })
+}
 bg.input.addEventListener('input', bgBuscar)
 bg.input.addEventListener('focus', bgBuscar)
 bg.input.addEventListener('keydown', (ev) => {

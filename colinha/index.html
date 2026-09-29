@@ -6,6 +6,20 @@
 <title>Minha colinha de voto</title>
 <meta name="description" content="Monte sua colinha de voto para 4 de outubro. Digite os números e confira os nomes antes de ir votar.">
 <meta name="robots" content="noindex">
+<!-- Previa do link em Instagram, WhatsApp e Facebook. O MESMO index.html serve
+     TODOS os subdominios da colinha (santinho, lindoso, rogerio, anistaldo,
+     regina, colinhacompleta, e as colinhas do Tozi e da Dulce), e o crawler
+     nao roda JS: ele ve este head antes de o tema por hostname existir. Por
+     isso a imagem e NEUTRA de proposito — arte de um candidato aqui apareceria
+     no link de todos os outros. URL absoluta porque og:image relativa nao e
+     garantida pelos raspadores. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Faça sua colinha de voto">
+<meta property="og:description" content="Digite os números, confira os nomes e leve na hora de votar. 4 de outubro.">
+<meta property="og:image" content="https://drelton4412.com.br/colinha/marca/og-colinha.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta name="twitter:card" content="summary">
 <!-- As tres fontes que a pagina usa, buscadas junto com o CSS em vez de
      depois dele: sem isto so eram descobertas quando uma regra casava, e
      comecavam ~60ms atras. Sao os numeros da urna que trocam de desenho na
@@ -57,17 +71,28 @@
   <!-- Busca do topo: um campo so, numero OU nome, varrendo todos os cargos
        livres de uma vez. O resultado ja diz o cargo; um toque (ou o numero
        completo) preenche o campo certo. Escondida ate os dados carregarem:
-       sem dataset nao ha o que buscar. -->
+       sem dataset nao ha o que buscar.
+       O titulo fica FORA da caixa e o placeholder diz "nome": no celular os
+       passos do topo somem e este era o unico texto da tela — e dizia so
+       "numero". Eleitor nao descobria que dava para buscar pelo nome
+       (relato de 28/09/2026). -->
   <div class="busca-geral" id="bg" hidden>
+    <label class="bg-titulo" for="bg-input">Buscar candidato</label>
+    <!-- Dois botoes bem grandes dizendo COMO buscar. A caixa aceita nome ou
+         numero em qualquer modo (buscarGlobal decide pelo que foi digitado);
+         o modo so troca o placeholder e o teclado do celular. -->
+    <div class="bg-modos" role="group" aria-label="Buscar por">
+      <button type="button" class="bg-modo ativo" data-modo="numero" data-ph="Digite o número">Por número</button>
+      <button type="button" class="bg-modo" data-modo="nome" data-ph="Digite o nome">Por nome</button>
+    </div>
     <div class="bg-caixa">
       <svg class="bg-lupa" viewBox="0 0 24 24" aria-hidden="true">
         <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/>
         <path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
       </svg>
       <input type="search" id="bg-input" class="bg-input"
-             placeholder="Digite o número do seu candidato"
-             autocomplete="off" enterkeyhint="search"
-             aria-label="Buscar candidato por número ou nome">
+             placeholder="Digite o número" inputmode="numeric"
+             autocomplete="off" enterkeyhint="search">
       <button type="button" id="bg-limpar" class="bg-x" aria-label="Limpar busca" hidden>✕</button>
     </div>
     <ul id="bg-lista" class="bg-lista" hidden></ul>

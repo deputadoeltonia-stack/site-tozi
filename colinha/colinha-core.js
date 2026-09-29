@@ -155,15 +155,43 @@ export const SANTINHOS = {
     // eleitor que aponta a camera bate naquele servidor antes de chegar na
     // colinha. Este dominio e HostGator dos nameservers ao IP, e o
     // subdominio nasce no proprio cPanel — nada fora dele no caminho.
-    hosts: ['rogerio.drelton4412.com.br', 'www.rogerio.drelton4412.com.br'],
+    // SO no dominio do proprio Rogerio (DNS na HostGator dele), apontado para
+    // a VPS 179.199.145.105 e servido de la pelo Caddy. Saiu do dominio do
+    // Dr. Elton em 25/09/2026, a pedido: rogerio.drelton4412.com.br voltou a
+    // abrir a colinha do Elton, e `soPeloHost` desliga o ?p=rogerio e o
+    // /c/rogerio (build/gerar_santinhos.mjs nao gera mais a pagina).
+    hosts: ['colinha.rogeriofrancosp.com.br'],
+    soPeloHost: true,
     // Os mesmos dois CNPJs da peca do Leandro, como impresso na lateral.
     legal: [
       'CNPJ Candidato: 68.283.009/0001-90',
       'CNPJ Contratado: 10.386.377/0001-84',
     ],
-    // SEM `fixos`: esta peca deixou de trazer o Dr. Elton impresso, entao o
-    // campo de deputado federal fica livre para o eleitor preencher. As
-    // outras pecas conjuntas (Leandro, Anistaldo, Tozi, Dulce) seguem com ele.
+    // Federal LIVRE: esta peca deixou de trazer o Dr. Elton impresso, entao o
+    // campo de deputado federal fica para o eleitor preencher. As outras
+    // pecas conjuntas (Leandro, Anistaldo, Tozi, Dulce) seguem com ele.
+    //
+    // Os aliados, FIXOS por pedido da campanha dele em 25/09/2026 ("deixa
+    // fixo os outros menos o federal"): ANDRE DO PRADO 222 no 1o voto de
+    // senador, TARCISIO 10 e FLAVIO BOLSONARO 22. O 2o voto de senador nao
+    // veio no pedido e fica livre.
+    fixos: { senador1: '222', governador: '10', presidente: '22' },
+  },
+  // Mesma peca do Rogerio, mas COM o Dr. Elton travado no federal: pedida
+  // para circular so por link/QR proprio. Entrada separada de propositos —
+  // o QR ja impresso do `rogerio` aponta para a peca sem o Elton, e mexer
+  // naquela entrada mudaria o que aquele QR abre.
+  rogerioelton: {
+    nome: 'ROGÉRIO FRANCO', cargo: 7, numero: '22999', partido: 'PL',
+    tema: 'santinho', rotulo: 'Deputado estadual',
+    cor: '#f4be38',
+    foto: '250002536405',
+    // Sem `hosts`: so a rota /c/rogerioelton, sem subdominio novo no cPanel.
+    legal: [
+      'CNPJ Candidato: 68.283.009/0001-90',
+      'CNPJ Contratado: 10.386.377/0001-84',
+    ],
+    fixos: { federal: '4412' },
   },
   anistaldo: {
     nome: 'PASTOR ANISTALDO', cargo: 7, numero: '20147', partido: 'PODE',
@@ -448,7 +476,9 @@ export function configDaRota(hostname, busca) {
   const slug = new URLSearchParams(busca ?? '').get('p')
   // hasOwn, nao SANTINHOS[slug]: ?p=__proto__ devolve Object.prototype, que e
   // um objeto truthy — a pagina abriria sem nome, sem numero e sem tema.
-  if (slug && Object.hasOwn(SANTINHOS, slug)) return SANTINHOS[slug]
+  if (slug && Object.hasOwn(SANTINHOS, slug) && !SANTINHOS[slug].soPeloHost) {
+    return SANTINHOS[slug]
+  }
   return configPara(hostDeDev(hostname, busca))
 }
 
